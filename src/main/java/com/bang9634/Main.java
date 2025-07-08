@@ -23,8 +23,12 @@ public class Main {
         String nx = "60";
         String ny = "127";
         try {
+            /**
+             * Config 클래스를 이용해 사용자 홈 디렉토리에 있는 설정 파일을 읽어온다.
+             */
             Properties config = Config.loadConfig();
             String serviceKey = config.getProperty("SERVICE_KEY");
+
             WeatherApiClient client = new WeatherApiClient(serviceKey);
 
             try {
