@@ -2,7 +2,6 @@ package com.bang9634.gui;
 
 import com.bang9634.Config;
 import com.bang9634.WeatherApiClient;
-import com.bang9634.FcstData;
 
 import javax.swing.*;
 import java.awt.*;
