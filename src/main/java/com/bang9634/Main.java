@@ -1,14 +1,10 @@
 package com.bang9634;
 
-import com.bang9634.gui.WeatherDisplayGUI;
+import com.bang9634.gui.*;
 import com.bang9634.util.*;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Scanner;
 
 /**
  * @todo    지금 인증키랑 날짜 시각, 좌표 사용자 입력으로 조정할 수 있도록 입출력 클래스 구현 <p>
@@ -18,50 +14,51 @@ import java.util.Scanner;
 
 public class Main {
     static public void main(String[] args) {
-        try {
-            run();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!Config.isConfigFileExists() || getServiceKeyFromConfig().isEmpty()) {
+            javax.swing.SwingUtilities.invokeLater(ServiceKeyInputGUI::new);
+        } else {
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                FcstData fcstData = fetchWeatherData(getServiceKeyFromConfig());
+                WeatherDisplayGUI gui = new WeatherDisplayGUI();
+                gui.setVisible(true);
+                gui.displayWeather(fcstData);
+            });
         }
     }
 
-    static private void run() throws Exception {
-        /**
-         * Config 클래스를 이용해 사용자 홈 디렉토리에 있는 설정 파일을 읽어온다.
-         */
-        String serviceKey = getServiceKey();
-        FcstData fcstData = fetchWeatherData(serviceKey);
-        WeatherDisplayGUI gui = new WeatherDisplayGUI();
-        gui.setVisible(true);
-        gui.displayWeather(fcstData);
-        for (Map.Entry<String, String> entry : fcstData.data.entrySet()) {
-            System.out.println(entry.getKey() + " : " + entry.getValue());
+    public static void showWeatherGUI() {
+        try {
+            FcstData fcstData = fetchWeatherData(getServiceKeyFromConfig());
+            WeatherDisplayGUI gui = new WeatherDisplayGUI();
+            gui.setVisible(true);
+            gui.displayWeather(fcstData);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     /** 
      * 
      */
-    private static String getServiceKey() throws IOException {
-        if(!Config.isConfigFileExists()) {
-            Scanner stdIn = new Scanner(System.in);
-            Config.constructConfig();
-            System.out.print("ServiceKey : ");
-            String input = stdIn.next();
-            Config.setServiceKeyOnConfig(input);
-            stdIn.close();
+    private static String getServiceKeyFromConfig() {
+        try {
+            Properties config = Config.loadConfig();
+            return config.getProperty("SERVICE_KEY", "");
+        } catch (IOException e) {
+            return "";
         }
-        Properties config = Config.loadConfig();
-        return config.getProperty("SERVICE_KEY");
     }
 
-    private static FcstData fetchWeatherData(String serviceKey) throws Exception {
-        String baseData = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String baseTime = "0500";
+    private static FcstData fetchWeatherData(String serviceKey) {
         String nx = "60";
         String ny = "127";
         WeatherApiClient client = new WeatherApiClient(serviceKey);
-        String json = client.getWeather(baseData, baseTime, nx, ny);
-        return FcstDataReader.getVilageFcstData(FcstDataReader.parseVilageFcstJsonData(json));
+        try {
+            String json = client.getWeather(WeatherConstants.LABEL_BASE_DATE, WeatherConstants.LABEL_BASE_TIME, nx, ny);
+            return FcstDataReader.getVilageFcstData(FcstDataReader.parseVilageFcstJsonData(json));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
