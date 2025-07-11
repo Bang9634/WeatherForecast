@@ -1,0 +1,19 @@
+# VS Code 설정
+.vscode/
+
+# macOS 시스템 파일
+.DS_Store
+
+# 빌드/컴파일 결과물
+/bin/
+/build/
+/out/
+/target/
+*.class
+
+# IDE 설정 파일
+*.iml
+.idea/
+
+# 로그 파일
+*.log
