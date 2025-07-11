@@ -78,8 +78,8 @@ public class FcstDataReader {
      */
     public static FcstData getVilageFcstData(List<Item> fcstItems) {
         FcstData fcstData = new FcstData();
-        fcstData.data.put("예보일자", fcstItems.get(0).fcstDate);
-        fcstData.data.put("예보시각", fcstItems.get(0).fcstTime);
+        fcstData.data.put(WeatherConstants.LABEL_FCST_DATE, fcstItems.get(0).fcstDate);
+        fcstData.data.put(WeatherConstants.LABEL_FCST_TIME, fcstItems.get(0).fcstTime);
         for (Item item : fcstItems) {
             /** 
              * FcstCodeMapper.CATEGORY_CODE_MAP 매핑 테이블에서 item.category 값과 일치하는
