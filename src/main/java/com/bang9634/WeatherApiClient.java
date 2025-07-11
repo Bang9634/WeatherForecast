@@ -3,6 +3,10 @@ package com.bang9634;
 import java.net.http.HttpClient; // 클라이언트 클래스 객체 생성
 import java.net.http.HttpRequest; // 서버 GET요청 전송
 import java.net.http.HttpResponse; // 서버로부터 응답
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.net.URI; // GET요청문 Build
 
 /**
@@ -87,8 +91,37 @@ public class WeatherApiClient {
 
         /** 클라이언트 객체가 서버에 GET요청 전송 후, client.send() 메서드는 서버의 Response을 반환, reponse 지역변수에 저장한다. */
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        
+        String responseBody = response.body();
+
+        System.out.println("API 응답 : " + responseBody);
+
+        /** 
+         * XML로 API응답이 왔을 경우,
+         * SERVICE_KEY_IS_NOT_REGISTERED_ERROR 메세지가 포함되어있으면 예외를 던지고 인증키 에러 메세지를 출력한다.
+         * 그 외의 경우는 JSON 데이터 타입이 아니므로, 예외를 던지고 XML 에러 응답을 출력한다.
+         */
+        if (responseBody.trim().startsWith("<")) {
+            if (responseBody.contains("SERVICE_KEY_IS_NOT_REGISTERED_ERROR")) {
+                throw new IllegalArgumentException("API 호출 실패 : 인증키가 등록되지 않았거나 잘못되었습니다.");
+            }
+            else {
+                throw new IllegalArgumentException("API 호출 실패 : XML 에러 응답\n" + responseBody);
+            }
+        }
+
+        /** 
+         * JSON로 API 응답이 왔을 경우.
+         * resultCode와 resultMsg를 확인하고, 정상 메세지인 "00"이 아니라면 예외를 던지고 내용을 출력한다.
+         */
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(responseBody);
+        String resultCode = root.path("response").path("header").path("resultCode").asText();
+        String resultMsg = root.path("response").path("header").path("resultMsg").asText();
+        if (!"00".equals(resultCode)) {
+            throw new IllegalArgumentException("API 호출 실패: " + resultMsg + " (resultCode=" + resultCode + ")");
+        }
+
         /** response에 단기예보 데이터를 담고 있는 body부분만 반환한다. */
-        return response.body();
+        return responseBody;
     }
 }
