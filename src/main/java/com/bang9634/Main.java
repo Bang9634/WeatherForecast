@@ -51,6 +51,7 @@ public class Main {
 
             } catch (Exception e) {
                 System.out.println("API 호출 실패 : " + e.getMessage());
+                e.printStackTrace();
             }
         } catch (Exception e) {
             System.out.println("UNAVALIBLE SERVICE_KEY");
