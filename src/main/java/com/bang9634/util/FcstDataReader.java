@@ -87,7 +87,7 @@ public class FcstDataReader {
              */
             String fcstDataCategory = FcstCodeMapper.CATEGORY_CODE_MAP.get(item.category);
 
-            /** 키에 해당하는 값으로 변환시켜 fcstData put한다. */
+            /** 키에 해당하는 값으로 변환시켜 fcstData에 put한다. */
             if (FcstCodeMapper.getSubMappingTableValue(item) != null) {
                 fcstData.data.put(fcstDataCategory, FcstCodeMapper.getSubMappingTableValue(item));
             }

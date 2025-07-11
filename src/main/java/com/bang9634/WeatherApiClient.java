@@ -68,7 +68,7 @@ public class WeatherApiClient {
      */
     public String getWeather(String baseDate, String baseTime, String nx, String ny) throws Exception {
 
-        /** 전달할 정보를 포함한 요청메세지 */
+        /** 전달할 정보를 포함한 요청메세지(url)를 선언한다. */
         String url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst" // 단기예보조희 API
                    + "?serviceKey=" + serviceKey // 인증키
                    + "&pageNo=1&numOfRows=10&dataType=JSON"// 페이지 번호, 한 페이지 결과 수, 요청자료형식(XML/JSON)
@@ -77,10 +77,10 @@ public class WeatherApiClient {
                    + "&nx=" + nx // 예보지점 X 좌표
                    + "&ny=" + ny; // 예보지점 Y 좌표
 
-        /** 클라이언트 객체 생성 */
+        /** 클라이언트 객체 생성한다. */
         HttpClient client = HttpClient.newHttpClient();
 
-        /** 서버에 전송할 GET요청문 build */
+        /** 서버에 전송할 GET요청문 build한다. */
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .build();

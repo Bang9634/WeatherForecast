@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Scanner;
 
 /**
  * @todo    지금 인증키랑 날짜 시각, 좌표 사용자 입력으로 조정할 수 있도록 입출력 클래스 구현 <p>
@@ -26,7 +27,17 @@ public class Main {
             /**
              * Config 클래스를 이용해 사용자 홈 디렉토리에 있는 설정 파일을 읽어온다.
              */
+            if (!Config.isConfigFileExists()) {
+                Scanner stdIn = new Scanner(System.in);
+                Config.constructConfig();
+                System.out.print("Service Key : ");
+                String input = stdIn.next();
+                Config.setServiceKeyOnConfig(input);
+                stdIn.close();
+            }
+            
             Properties config = Config.loadConfig();
+            
             String serviceKey = config.getProperty("SERVICE_KEY");
 
             WeatherApiClient client = new WeatherApiClient(serviceKey);
