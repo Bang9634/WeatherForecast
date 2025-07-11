@@ -1,5 +1,6 @@
 package com.bang9634;
 
+import com.bang9634.gui.WeatherDisplayGUI;
 import com.bang9634.util.*;
 
 import java.io.IOException;
@@ -30,7 +31,7 @@ public class Main {
          */
         String serviceKey = getServiceKey();
         FcstData fcstData = fetchWeatherData(serviceKey);
-        GUI gui = new GUI();
+        WeatherDisplayGUI gui = new WeatherDisplayGUI();
         gui.setVisible(true);
         gui.displayWeather(fcstData);
         for (Map.Entry<String, String> entry : fcstData.data.entrySet()) {
@@ -38,6 +39,9 @@ public class Main {
         }
     }
 
+    /** 
+     * 
+     */
     private static String getServiceKey() throws IOException {
         if(!Config.isConfigFileExists()) {
             Scanner stdIn = new Scanner(System.in);

@@ -1,4 +1,4 @@
-package com.bang9634.util;
+package com.bang9634.gui;
 
 import com.bang9634.FcstData;
 
@@ -7,10 +7,10 @@ import java.awt.*;
 import java.util.Map;
 
 
-public class GUI extends JFrame {
+public class WeatherDisplayGUI extends JFrame {
     private JTextArea textArea;
 
-    public GUI() {
+    public WeatherDisplayGUI() {
         setTitle("Weather Forecast");
         setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
