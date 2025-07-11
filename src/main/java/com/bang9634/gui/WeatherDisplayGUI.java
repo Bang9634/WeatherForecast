@@ -28,4 +28,10 @@ public class WeatherDisplayGUI extends JFrame {
         }
         textArea.setText(sb.toString());
     }
+
+    public static void show(FcstData fcstData) {
+        WeatherDisplayGUI gui = new WeatherDisplayGUI();
+        gui.setVisible(true);
+        gui.displayWeather(fcstData);
+    }
 }
