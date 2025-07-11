@@ -74,6 +74,7 @@ public class Config {
 
     /**
      * 사용자 홈 디렉토리에 존재하는 Config File 객체를 반환한다.
+     * 
      * @return  Config File객체를 반환한다.
      */
     public static File getConfigFile() {
