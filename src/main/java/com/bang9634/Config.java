@@ -68,8 +68,24 @@ public class Config {
      * 
      * @return  .weather_config 파일이 존재하면 true, 존재하지않으면 false를 반환한다.
      */
-
     public static boolean isConfigFileExists() {
         return CONFIG_FILE.exists();
+    }
+
+    /**
+     * 사용자 홈 디렉토리에 존재하는 Config File 객체를 반환한다.
+     * @return  Config File객체를 반환한다.
+     */
+    public static File getConfigFile() {
+        return CONFIG_FILE;
+    }
+    
+    /**
+     * 사용자 홈 디렉토리의 Config File의 절대 경로를 반환한다.
+     * 
+     * @return  Config File의 절대 경로를 반환한다.
+     */
+    public static String getConfigFilePath() {
+        return CONFIG_FILE.getAbsolutePath();
     }
 }
