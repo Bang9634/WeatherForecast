@@ -5,6 +5,7 @@ import java.net.http.HttpRequest; // 서버 GET요청 전송
 import java.net.http.HttpResponse; // 서버로부터 응답
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.bang9634.util.WeatherConstants;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.net.URI; // GET요청문 Build
@@ -135,7 +136,7 @@ public class WeatherApiClient {
      */
     public boolean isValiedServiceKey() {
         try {
-            this.getWeather("20250101", "0500", "60", "127");
+            this.getWeather(WeatherConstants.LABEL_BASE_DATE, WeatherConstants.LABEL_BASE_TIME, "60", "127");
             return true;
         } catch (Exception e) {
             return false;

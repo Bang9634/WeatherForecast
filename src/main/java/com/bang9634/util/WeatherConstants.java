@@ -6,4 +6,7 @@ package com.bang9634.util;
 public class WeatherConstants {
     public static final String LABEL_FCST_DATE = "예보일자";
     public static final String LABEL_FCST_TIME = "예보시각";
+    public static final String LABEL_BASE_DATE = java.time.LocalDate.now()
+        .format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd"));
+    public static final String LABEL_BASE_TIME = "0500";
 }
