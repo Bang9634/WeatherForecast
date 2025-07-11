@@ -124,4 +124,21 @@ public class WeatherApiClient {
         /** response에 단기예보 데이터를 담고 있는 body부분만 반환한다. */
         return responseBody;
     }
+
+    /** 
+     * Service key가 유효한지 검사한다. <p>
+     * 
+     * 임의의 파라미터로 API 호출 테스트를 하여 유효한 Service key라면 true를 반환하고, 호출과정에서
+     * 예외를 던진다면 false를 반환한다.
+     * 
+     * @return  유효한 Service key이면 true, 그렇지않으면 false를 반환한다.
+     */
+    public boolean isValiedServiceKey() {
+        try {
+            this.getWeather("20250101", "0500", "60", "127");
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
