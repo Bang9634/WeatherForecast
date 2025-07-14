@@ -3,6 +3,8 @@ package com.bang9634;
 import java.io.*;
 import java.util.*;
 
+import com.bang9634.util.ConfigConstants;
+
 /**
  * serviceKey와 같은 설정을 불러오는 클래스 <p>
  * 
@@ -43,7 +45,7 @@ public class Config {
     public static void constructConfig() throws IOException {
         if (CONFIG_FILE.exists()) return;
         Properties props = new Properties();
-        props.setProperty("SERVICE_KEY", "");
+        props.setProperty(ConfigConstants.SERVICE_KEY, "");
         try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
             props.store(writer, "Weather API Config");
         }
