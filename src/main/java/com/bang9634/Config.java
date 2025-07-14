@@ -36,6 +36,9 @@ public class Config {
 
     /**
      * 사용자 홈 디렉토리에 .weather_config 파일이 존재하지 않으면 config파일을 생성한다.
+     * 
+     * @exception   IOException
+     *              Config 파일 생성에 실패 시 예외를 던진다.
      */
     public static void constructConfig() throws IOException {
         if (CONFIG_FILE.exists()) return;
