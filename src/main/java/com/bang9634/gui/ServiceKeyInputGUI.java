@@ -70,7 +70,7 @@ public class ServiceKeyInputGUI extends JFrame {
         if (client.isValiedServiceKey()) {
             try {
                 /** serviceKey가 유효하면 Config 파일에 SERVICE_KEY에 해당 serviceKey를 덮어씌운다. */
-                Config.setServiceKeyOnConfig(key);
+                Config.setConfig("SERVICE_KEY", key);
 
                 /** 인증 성공 메세지 출력과 함께 창을 해제(release)한다. */
                 statusLabel.setText("인증 성공");

@@ -47,17 +47,21 @@ public class Config {
     }
 
     /**
-     * 사용자 홈 디렉토리에 존재하는 .weather_config에 serviceKey를 set한다.
+     * 사용자 홈 디렉토리에 존재하는 .weather_config에 key, value값을 받아 set한다. <p>
+     * Config 파일에는 (key)=(value) 방식으로 저장된다.
      * 
-     * @param   serviceKey
-     *          API를 제공하는 웹사이트에서 부여하는 인증키를 매개변수로 전달한다.
+     * @param   key
+     *          Config 파일에 저장할 key를 매개변수로 받는다.
+     * 
+     * @param   value
+     *          해당하는 key에 value를 저장한다.
      * 
      * @throws  IOException
      *          홈 디렉토리에 .weather_config 파일이 존재하지않으면 IOException 예외를 던진다.
      */
-    public static void setServiceKeyOnConfig(String serviceKey) throws IOException {
+    public static void setConfig(String key, String value) throws IOException {
         Properties props = loadConfig();
-        props.setProperty("SERVICE_KEY", serviceKey);
+        props.setProperty(key, value);
         try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
             props.store(writer, "Weather API Config");
         }
