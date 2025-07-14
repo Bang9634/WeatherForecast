@@ -20,7 +20,7 @@ public class Main {
             javax.swing.SwingUtilities.invokeLater(() -> {
                 FcstData fcstData = fetchWeatherData(getServiceKeyFromConfig());
                 WeatherDisplayGUI gui = new WeatherDisplayGUI();
-                gui.displayWeather(fcstData);
+                gui.setWeatherData(fcstData);
                 gui.setVisible(true);
             });
         }
@@ -36,7 +36,7 @@ public class Main {
             FcstData fcstData = fetchWeatherData(getServiceKeyFromConfig());
             WeatherDisplayGUI gui = new WeatherDisplayGUI();
             gui.setVisible(true);
-            gui.displayWeather(fcstData);
+            gui.setWeatherData(fcstData);
         } catch (Exception e) {
             e.printStackTrace();
         }

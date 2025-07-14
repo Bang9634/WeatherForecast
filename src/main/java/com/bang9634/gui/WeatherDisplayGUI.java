@@ -32,7 +32,7 @@ public class WeatherDisplayGUI extends JFrame {
      * @param   fcstData 
      *          기상 예보 데이터를 인자로 넘겨 GUI로 출력한다.
      */
-    public void displayWeather(FcstData fcstData) {
+    public void setWeatherData(FcstData fcstData) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> entry : fcstData.data.entrySet()) {
             sb.append(entry.getKey()).append(" : ").append(entry.getValue()).append("\n");
