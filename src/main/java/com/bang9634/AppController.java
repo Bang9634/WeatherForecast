@@ -1,8 +1,5 @@
 package com.bang9634;
 
-import java.io.IOException;
-import java.util.Properties;
-
 import com.bang9634.gui.*;
 import com.bang9634.util.*;
 
@@ -20,7 +17,7 @@ public class AppController {
          * TODO: Config 파일이 존재하고 serviceKey가 작성되있지만 유효하지 않은 serviceKey일 경우, 
          * TODO: 프로그램 실행시 GUI가 나오지않고 비정상 종료됨. 조건문에서 유효성 검사를 해야될 것으로 보임.
          */
-        if (!Config.isConfigFileExists() || getServiceKeyFromConfig().isEmpty()) {
+        if (!Config.isConfigFileExists() || Config.getConfig("SERVICE_KEY").isEmpty()) {
             /** Config 파일이 존재하지 않거나, 파일안에 ServiceKey가 존재하지 않는 경우 */
             javax.swing.SwingUtilities.invokeLater(() -> {
                 /** serviceKey 입력 후 유효한 경우 Config 파일에 입력한 serviceKey를 저장한다. */
@@ -29,7 +26,7 @@ public class AppController {
                      * 인증 성공 시 Config 파일로부터 serviceKey를 불러와 날씨 정보 초기화를 하고,
                      * 기상 예보 GUI를 출력한다.
                      */
-                    String serviceKey = getServiceKeyFromConfig();
+                    String serviceKey = Config.getConfig("SERVICE_KEY");
                     FcstData fcstData = fetchWeatherData(serviceKey);
                     WeatherDisplayGUI weatherGui = new WeatherDisplayGUI();
                     weatherGui.setWeatherData(fcstData);
@@ -40,25 +37,11 @@ public class AppController {
         } else {
             /** Config 파일이 존재하고 serviceKey가 존재하면 바로 기상 정보 GUI를 출력한다. */
             javax.swing.SwingUtilities.invokeLater(() -> {
-                FcstData fcstData = fetchWeatherData(getServiceKeyFromConfig());
+                FcstData fcstData = fetchWeatherData(Config.getConfig("SERVICE_KEY"));
                 WeatherDisplayGUI weatherGui = new WeatherDisplayGUI();
                 weatherGui.setWeatherData(fcstData);
                 weatherGui.setVisible(true);
             });
-        }
-    }
-
-    /** 
-     * Config 파일로부터 serviceKey를 불러들여와 String타입으로 반환한다.
-     * 
-     * @return  serviceKey를 String타입으로 반환한다.
-     */
-    private static String getServiceKeyFromConfig() {
-        try {
-            Properties config = Config.loadConfig();
-            return config.getProperty("SERVICE_KEY", "");
-        } catch (IOException e) {
-            return "";
         }
     }
 

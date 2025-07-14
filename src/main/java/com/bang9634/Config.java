@@ -56,14 +56,35 @@ public class Config {
      * @param   value
      *          해당하는 key에 value를 저장한다.
      * 
-     * @throws  IOException
-     *          홈 디렉토리에 .weather_config 파일이 존재하지않으면 IOException 예외를 던진다.
      */
-    public static void setConfig(String key, String value) throws IOException {
-        Properties props = loadConfig();
-        props.setProperty(key, value);
-        try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
-            props.store(writer, "Weather API Config");
+    public static void setConfig(String key, String value) {
+        try {
+            Properties props = loadConfig();
+            props.setProperty(key, value);
+            try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
+                props.store(writer, "Weather API Config");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /** 
+     * Config 파일로부터 매개변수 key에 해당하는 값을 String타입으로 반환한다.
+     * 매개변수 key와 일치하는 값이 없을 경우 디폴트 값으로 ""를 반환한다.
+     * 
+     * @param   key
+     *          Config파일에서 불러오고자 하는 값의 key를 인자로 넘긴다.
+     * 
+     * @return  Config 파일에서 매개변수 key에 해당하는 값을 반환한다.
+     */
+    public static String getConfig(String key) {
+        try {
+            Properties config = Config.loadConfig();
+            return config.getProperty(key, "");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
         }
     }
 

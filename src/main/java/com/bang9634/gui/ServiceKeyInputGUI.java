@@ -6,7 +6,6 @@ import com.bang9634.WeatherApiClient;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 
 /**
  * ServiceKey를 입력하는 화면을 출력하는 GUI 클래스
@@ -68,21 +67,15 @@ public class ServiceKeyInputGUI extends JFrame {
 
         WeatherApiClient client = new WeatherApiClient(key);
         if (client.isValiedServiceKey()) {
-            try {
-                /** serviceKey가 유효하면 Config 파일에 SERVICE_KEY에 해당 serviceKey를 덮어씌운다. */
-                Config.setConfig("SERVICE_KEY", key);
+            /** serviceKey가 유효하면 Config 파일에 SERVICE_KEY에 해당 serviceKey를 덮어씌운다. */
+            Config.setConfig("SERVICE_KEY", key);
 
-                /** 인증 성공 메세지 출력과 함께 창을 해제(release)한다. */
-                statusLabel.setText("인증 성공");
-                dispose();
+            /** 인증 성공 메세지 출력과 함께 창을 해제(release)한다. */
+            statusLabel.setText("인증 성공");
+            dispose();
 
-                /** 콜백 호출 */
-                if (onSuccess != null) onSuccess.run();
-
-            } catch (IOException ex) {
-                /** 예외 발생시 메세지를 출력한다. */
-                statusLabel.setText("설정 파일 저장 실패" + ex.getMessage());
-            }
+            /** 콜백 호출 */
+            if (onSuccess != null) onSuccess.run();
         }
         else {
             /** 유효하지 않은키면 인증 실패 메세지를 출력한다. */
