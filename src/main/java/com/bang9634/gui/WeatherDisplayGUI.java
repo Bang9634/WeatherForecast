@@ -8,6 +8,8 @@ import java.util.Map;
 
 /**
  * 기상 예보 정보를 출력하는 GUI 클래스
+ * 
+ * TODO: serviceKey 초기화 버튼 추가하기
  */
 public class WeatherDisplayGUI extends JFrame {
     private JTextArea textArea;
