@@ -11,9 +11,9 @@ import java.awt.event.ActionEvent;
  * ServiceKey를 입력하는 화면을 출력하는 GUI 클래스
  */
 public class ServiceKeyInputGUI extends JFrame {
-    private JTextField keyField;
-    private JButton submitButton;
-    private JLabel statusLabel;
+    private JTextField keyField; /** 키 입력창 */
+    private JButton submitButton; /** submit 버튼 */
+    private JLabel statusLabel; /** 상태창 */
     private Runnable onSuccess; /** 인증 성공 시 다음 동작을 담을 코드 블럭 변수 */
 
     /** 
@@ -51,7 +51,11 @@ public class ServiceKeyInputGUI extends JFrame {
 
         setLayout(new BorderLayout());
         add(panel, BorderLayout.CENTER);
-        add(statusLabel, BorderLayout.SOUTH);
+
+        /** statusLabel 중앙 아래로 정렬해 추가한다. */
+        JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        statusPanel.add(statusLabel);
+        add(statusPanel, BorderLayout.SOUTH);
     }
 
     /**
@@ -79,7 +83,7 @@ public class ServiceKeyInputGUI extends JFrame {
         }
         else {
             /** 유효하지 않은키면 인증 실패 메세지를 출력한다. */
-            statusLabel.setText("인증 실패: unavalible Service key");
+            statusLabel.setText("인증 실패");
         }
     }
 }
