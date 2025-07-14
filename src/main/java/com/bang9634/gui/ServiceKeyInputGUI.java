@@ -36,7 +36,16 @@ public class ServiceKeyInputGUI extends JFrame {
          */
         keyField = new JTextField(25);
         submitButton = new JButton("확인");
-        statusLabel = new JLabel("서비스키를 입력하세요");
+        statusLabel = new JLabel("서비스 키를 입력하세요");
+
+        keyField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { resetStatus(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { resetStatus(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { resetStatus(); }
+            private void resetStatus() {
+                statusLabel.setText("서비스 키를 입력하세요");
+            }
+        });
         
         /** 
          * 버튼에 액션 리스너를 추가한다.
@@ -44,6 +53,7 @@ public class ServiceKeyInputGUI extends JFrame {
          */
         submitButton.addActionListener(this::onSubmit);
 
+        /** Service Key : 메세지를 띄울 패널을 추가한다. */
         JPanel panel = new JPanel();
         panel.add(new JLabel("Service Key : "));
         panel.add(keyField);
