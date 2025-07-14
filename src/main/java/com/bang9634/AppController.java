@@ -1,6 +1,6 @@
 package com.bang9634;
 
-import com.bang9634.gui.*;
+import com.bang9634.gui.NavigationManager;
 import com.bang9634.util.*;
 
 /**
@@ -9,6 +9,7 @@ import com.bang9634.util.*;
  * 앱의 실행 흐름을 제어한다.
  */
 public class AppController {
+    private static final NavigationManager navigationManager = new NavigationManager();
     public static void run() {
         /** 
          * Config 파일이 존재하지 않거나, 파일안에 ServiceKey가 없다면 ServiceKeyInputGUI를 출력한다. <p>
@@ -21,26 +22,20 @@ public class AppController {
             /** Config 파일이 존재하지 않거나, 파일안에 ServiceKey가 존재하지 않는 경우 */
             javax.swing.SwingUtilities.invokeLater(() -> {
                 /** serviceKey 입력 후 유효한 경우 Config 파일에 입력한 serviceKey를 저장한다. */
-                ServiceKeyInputGUI serviceKeyInputGui = new ServiceKeyInputGUI(()-> {
+                navigationManager.showServiceKeyInput(()-> {
                     /** 
                      * 인증 성공 시 Config 파일로부터 serviceKey를 불러와 날씨 정보 초기화를 하고,
                      * 기상 예보 GUI를 출력한다.
                      */
-                    String serviceKey = Config.getConfig(ConfigConstants.SERVICE_KEY);
-                    FcstData fcstData = fetchWeatherData(serviceKey);
-                    WeatherDisplayGUI weatherGui = new WeatherDisplayGUI();
-                    weatherGui.setWeatherData(fcstData);
-                    weatherGui.setVisible(true);
+                    FcstData fcstData = fetchWeatherData(Config.getConfig(ConfigConstants.SERVICE_KEY));
+                    navigationManager.showWeatherDisplay(fcstData);
                 });
-                serviceKeyInputGui.setVisible(true);
             });
         } else {
             /** Config 파일이 존재하고 serviceKey가 존재하면 바로 기상 정보 GUI를 출력한다. */
             javax.swing.SwingUtilities.invokeLater(() -> {
                 FcstData fcstData = fetchWeatherData(Config.getConfig(ConfigConstants.SERVICE_KEY));
-                WeatherDisplayGUI weatherGui = new WeatherDisplayGUI();
-                weatherGui.setWeatherData(fcstData);
-                weatherGui.setVisible(true);
+                navigationManager.showWeatherDisplay(fcstData);
             });
         }
     }
