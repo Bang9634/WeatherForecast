@@ -15,8 +15,7 @@ public class AppController {
          * Config 파일이 존재하지 않거나, 파일안에 ServiceKey가 없다면 ServiceKeyInputGUI를 출력한다. <p>
          * Config 파일이 이미 존재하고, ServiceKey가 있다면 ServiceKeyInputGUI를 건너뛰고 WeatherDisplayGUi를 바로 출력한다 <p>
          * 
-         * TODO: Config 파일이 존재하고 serviceKey가 작성되있지만 유효하지 않은 serviceKey일 경우, 
-         * TODO: 프로그램 실행시 GUI가 나오지않고 비정상 종료됨. 조건문에서 유효성 검사를 해야될 것으로 보임.
+         * TODO: Config 파일이 존재하고 serviceKey가 작성되있지만 유효하지 않은 serviceKey일 경우, 프로그램 실행시 GUI가 나오지않고 비정상 종료됨. 조건문에서 유효성 검사를 해야될 것으로 보임.
          */
         if (!Config.isConfigFileExists() || Config.getConfig(ConfigConstants.SERVICE_KEY).isEmpty()) {
             /** Config 파일이 존재하지 않거나, 파일안에 ServiceKey가 존재하지 않는 경우 */
