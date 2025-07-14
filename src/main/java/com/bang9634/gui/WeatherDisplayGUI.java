@@ -39,17 +39,4 @@ public class WeatherDisplayGUI extends JFrame {
         }
         textArea.setText(sb.toString());
     }
-
-    /**
-     * 정적 메서드로써 객체를 생성하지 않고 호출이 가능하다. <p>
-     * 메서드 내부에서 WeatherDisplayGUI 객체를 생성하여 displayWeather() 메서드를 호출한다.
-     * 
-     * @param   fcstData
-     *          기상 예보 데이터를 인자로 넘겨 GUI로 출력한다.
-     */
-    public static void show(FcstData fcstData) {
-        WeatherDisplayGUI gui = new WeatherDisplayGUI();
-        gui.setVisible(true);
-        gui.displayWeather(fcstData);
-    }
 }
