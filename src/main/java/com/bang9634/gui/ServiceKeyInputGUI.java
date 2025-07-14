@@ -15,12 +15,18 @@ public class ServiceKeyInputGUI extends JFrame {
     private JTextField keyField;
     private JButton submitButton;
     private JLabel statusLabel;
+    private Runnable onSuccess; /** 인증 성공 시 다음 동작을 담을 코드 블럭 변수 */
 
     /** 
      * GUI 생성자 <p>
      * 창크기의 설정과 메시지 및 버튼생성, 버튼에 액션 리스너를 추가한다.
+     * 매개 변수로는 유효성 검사 통과 시 실행할 코드 블록(다음 동작)을 받는다.
+     * 
+     * @param   onSuccess
+     *          ServiceKeyInputGUI 생성자 호출 후, serviceKey가 유효할 때 실행할 코드 블록을 뜻하는 콜백 패턴이다.
      */
-    public ServiceKeyInputGUI() {
+    public ServiceKeyInputGUI(Runnable onSuccess) {
+        this.onSuccess = onSuccess;
         setTitle("Service Key 입력");
         setSize(350, 150);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,11 +76,9 @@ public class ServiceKeyInputGUI extends JFrame {
                 statusLabel.setText("인증 성공");
                 dispose();
 
-                /** 
-                 * 기상정보를 출력하는 메서드를 호출한다.
-                 * @todo 코드 꼬임 주범. Main에 과한 책임과 역할 부여. 수정필요함.
-                 */
-                javax.swing.SwingUtilities.invokeLater(com.bang9634.Main::showWeatherGUI);
+                /** 콜백 호출 */
+                if (onSuccess != null) onSuccess.run();
+
             } catch (IOException ex) {
                 /** 예외 발생시 메세지를 출력한다. */
                 statusLabel.setText("설정 파일 저장 실패" + ex.getMessage());
