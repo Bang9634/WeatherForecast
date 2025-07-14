@@ -38,10 +38,19 @@ public class ServiceKeyInputGUI extends JFrame {
         submitButton = new JButton("확인");
         statusLabel = new JLabel("서비스 키를 입력하세요");
 
+        /**
+         * DocumentListener는 텍스트 필드의 이벤트를 감지하는 리스너로
+         * 상황에 맞게 statusLabel을 초기화한다.
+         */
         keyField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            /** 텍스트가 추가될 때 */
             public void insertUpdate(javax.swing.event.DocumentEvent e) { resetStatus(); }
+            /** 텍스트가 삭제될 때 */
             public void removeUpdate(javax.swing.event.DocumentEvent e) { resetStatus(); }
+            /** 속성이 변경될 때 */
             public void changedUpdate(javax.swing.event.DocumentEvent e) { resetStatus(); }
+
+            /** 위 이벤트들이 감지될 때마다 statusLabel을 초기화한다. */
             private void resetStatus() {
                 statusLabel.setText("서비스 키를 입력하세요");
             }
@@ -72,7 +81,7 @@ public class ServiceKeyInputGUI extends JFrame {
      * 버튼 클릭 액션을 감지했을 때 실행되는 메서드. <p>      
      */
     private void onSubmit(ActionEvent e) {
-        /** keyField가 비어져있으면, 서비스키 입력 메세지를 출력한다. */
+        /** keyField가 비어져있으면, 서비스키 입력 메세지를 statusLabel에 출력한다. */
         String key = keyField.getText().trim();
         if (key.isEmpty()) {
             statusLabel.setText("서비스키를 입력하세요.");
@@ -84,15 +93,28 @@ public class ServiceKeyInputGUI extends JFrame {
             /** serviceKey가 유효하면 Config 파일에 SERVICE_KEY에 해당 serviceKey를 덮어씌운다. */
             Config.setConfig("SERVICE_KEY", key);
 
-            /** 인증 성공 메세지 출력과 함께 창을 해제(release)한다. */
+            /** 인증 성공을 statusLabel에 출력하고 창을 해제(release)한다. */
             statusLabel.setText("인증 성공");
+
+            /** 인증 성공 팝업을 띄운다. */
+            JOptionPane.showMessageDialog(this, "인증 성공", "알림", JOptionPane.PLAIN_MESSAGE, null);
+
             dispose();
 
             /** 콜백 호출 */
             if (onSuccess != null) onSuccess.run();
         }
         else {
-            /** 유효하지 않은키면 인증 실패 메세지를 출력한다. */
+            /** 인증 실패 팝업을 띄운다. */
+            JOptionPane.showMessageDialog(this, "인증 실패", "오류",JOptionPane.PLAIN_MESSAGE, null);
+            
+            /** 
+             * 한글 입력 시 한글IME와 Swing 호환성 문제로 포커스를 잃고 잠시 정지하는 현상이 존재한다.
+             * 아래 코드는 이를 해결하기 위해 팝업이 닫힌 뒤 입력창에 포커스를 강제로 부여하는 코드이다.
+             */
+            keyField.requestFocusInWindow();
+
+            /** 유효하지 않은키면 인증 실패를 statusLabel에 출력한다. */
             statusLabel.setText("인증 실패");
         }
     }
