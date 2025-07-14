@@ -27,10 +27,10 @@ public class WeatherDisplayGUI extends JFrame {
     }
 
     /** 
-     * 기상 정보를 텍스트 공간에 순차적으로 출력한다.
+     * 기상 정보를 텍스트 공간에 순차적으로 출력할 수 있도록 세팅한다.
      * 
      * @param   fcstData 
-     *          기상 예보 데이터를 인자로 넘겨 GUI로 출력한다.
+     *          기상 예보 데이터를 인자로 넘겨 출력할 수 있도록 세팅한다.
      */
     public void setWeatherData(FcstData fcstData) {
         StringBuilder sb = new StringBuilder();

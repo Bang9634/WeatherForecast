@@ -15,7 +15,10 @@ public class Main {
          * 
          */
         if (!Config.isConfigFileExists() || getServiceKeyFromConfig().isEmpty()) {
-            javax.swing.SwingUtilities.invokeLater(ServiceKeyInputGUI::new);
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                ServiceKeyInputGUI gui = new ServiceKeyInputGUI();
+                gui.setVisible(true);
+            });
         } else {
             javax.swing.SwingUtilities.invokeLater(() -> {
                 FcstData fcstData = fetchWeatherData(getServiceKeyFromConfig());

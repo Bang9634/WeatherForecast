@@ -16,7 +16,10 @@ public class ServiceKeyInputGUI extends JFrame {
     private JButton submitButton;
     private JLabel statusLabel;
 
-    /** 생성자. 객체 생성 순간에 화면 출력을 한다. */
+    /** 
+     * GUI 생성자 <p>
+     * 창크기의 설정과 메시지 및 버튼생성, 버튼에 액션 리스너를 추가한다.
+     */
     public ServiceKeyInputGUI() {
         setTitle("Service Key 입력");
         setSize(350, 150);
@@ -44,7 +47,6 @@ public class ServiceKeyInputGUI extends JFrame {
         setLayout(new BorderLayout());
         add(panel, BorderLayout.CENTER);
         add(statusLabel, BorderLayout.SOUTH);
-        setVisible(true);
     }
 
     /**
