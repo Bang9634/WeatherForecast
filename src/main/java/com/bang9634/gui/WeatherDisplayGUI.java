@@ -26,6 +26,11 @@ public class WeatherDisplayGUI extends JFrame {
         add(new JScrollPane(textArea), BorderLayout.CENTER);
     }
 
+    public WeatherDisplayGUI(FcstData fcstData) {
+        this();
+        setWeatherData(fcstData);
+    }
+
     /** 
      * 기상 정보를 텍스트 공간에 순차적으로 출력할 수 있도록 세팅한다.
      * 
