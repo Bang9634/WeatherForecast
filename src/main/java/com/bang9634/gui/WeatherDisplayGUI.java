@@ -26,6 +26,15 @@ public class WeatherDisplayGUI extends JFrame {
         add(new JScrollPane(textArea), BorderLayout.CENTER);
     }
 
+    /**
+     * 매개변수로 기상 정보 FcstData를 받는 생성자. <p>
+     * 
+     * 디폴트 생성자를 호출하고, setWeatherData 메서드에 매개변수 fcstData를 넘겨
+     * 객체 생성과 동시에 데이터 초기화를 진행한다.
+     * 
+     * @param   fcstData
+     *          객체 생성과 동시에 데이터 초기화를 위한 기상 예보 데이터를 매개변수로 받는다.
+     */
     public WeatherDisplayGUI(FcstData fcstData) {
         this();
         setWeatherData(fcstData);
