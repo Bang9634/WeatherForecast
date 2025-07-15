@@ -4,42 +4,54 @@ import com.bang9634.gui.NavigationManager;
 import com.bang9634.util.*;
 
 /**
- * 전체 애플리케이션의 흐름을 담당하는 컨트롤러 <p>
+ * 전체 애플리케이션의 흐름을 담당하는 컨트롤러 클래스 <p>
  * 
- * 앱의 실행 흐름을 제어한다.
+ * 앱의 실행 흐름을 제어한다. 중앙관리 구조 + MVC 형태로 동작한다.
  */
 public class AppController {
     private static final NavigationManager navigationManager = new NavigationManager();
 
+    /** 프로그램 흐름을 시작한다. */
     public static void run() {
+        goToInitialScreen();
+    }
+
+    /** 
+     * 초기 화면을 띄운다 <p>
+     * Config 파일의 유무와 serviceKey의 유효성을 판단해 ServiceKeyInput 혹은 WeatherDisplay로 이동한다.
+     */
+    private static void goToInitialScreen() {
         String serviceKey = Config.getConfig(ConfigConstants.SERVICE_KEY);
-        /** 
-         * Config 파일이 존재하지 않거나, 파일안에 ServiceKey가 없다면 ServiceKeyInputGUI를 출력한다. <p>
-         * Config 파일이 이미 존재하고, ServiceKey가 있다면 ServiceKeyInputGUI를 건너뛰고 WeatherDisplayGUi를 바로 출력한다 <p>
-         */
-        if (!Config.isConfigFileExists() || serviceKey.isEmpty() || !new WeatherApiClient(serviceKey).isValiedServiceKey()) {
-            /** 
-             * Config 파일이 존재하지 않거나, 파일안에 ServiceKey가 존재하지 않거나, serviceKey가 유효하지 않다면
-             * ServiceKeyInputGUI 출력.
-            */
-            javax.swing.SwingUtilities.invokeLater(() -> {
-                /** serviceKey 입력 후 유효한 경우 Config 파일에 입력한 serviceKey를 저장한다. */
-                navigationManager.showServiceKeyInput(()-> {
-                    /** 
-                     * 인증 성공 시 Config 파일로부터 serviceKey를 불러와 날씨 정보 초기화를 하고,
-                     * 기상 예보 GUI를 출력한다.
-                     */
-                    FcstData fcstData = fetchWeatherData(Config.getConfig(ConfigConstants.SERVICE_KEY));
-                    navigationManager.showWeatherDisplay(fcstData);
-                });
-            });
+        if (!Config.isConfigFileExists() || !new WeatherApiClient(serviceKey).isValiedServiceKey()) {
+            goToServiceKeyInput();
         } else {
-            /** 유효한 serviceKey가 존재하면 기상 예보 데이터를 바로 출력한다. */
-            javax.swing.SwingUtilities.invokeLater(() -> {
-                FcstData fcstData = fetchWeatherData(serviceKey);
-                navigationManager.showWeatherDisplay(fcstData);
-            });
+            goToWeatherDisplay();
         }
+    }
+
+    /** 
+     * ServiceKeyInput을 띄운다. 
+     * 인증 성공 시 다시 초기 화면 판단 로직을 다시 호출한다.
+    */
+    private static void goToServiceKeyInput() {
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            navigationManager.showServiceKeyInput(() -> {
+                goToInitialScreen();
+            });
+        });
+    }
+
+    /** 
+     * goToWeatherDisplay를 띄운다.
+     * fetchWeatherData를 호출해 정보를 기상 예보 데이터를 가져와 WeatherDisplay에게 전달하여
+     * 기상 예보 정보를 출력한다.
+     */
+    private static void goToWeatherDisplay() {
+        String serviceKey = Config.getConfig(ConfigConstants.SERVICE_KEY);
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            FcstData fcstData = fetchWeatherData(serviceKey);
+            navigationManager.showWeatherDisplay(fcstData);
+        });
     }
 
     /**
