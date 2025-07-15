@@ -45,12 +45,15 @@ public class AppController {
      * goToWeatherDisplay를 띄운다.
      * fetchWeatherData를 호출해 정보를 기상 예보 데이터를 가져와 WeatherDisplay에게 전달하여
      * 기상 예보 정보를 출력한다.
+     * 서비스 키 초기화 버튼을 누르면 초기 화면 판단 로직을 다시 호출한다.
      */
     private static void goToWeatherDisplay() {
         String serviceKey = Config.getConfig(ConfigConstants.SERVICE_KEY);
         javax.swing.SwingUtilities.invokeLater(() -> {
             FcstData fcstData = fetchWeatherData(serviceKey);
-            navigationManager.showWeatherDisplay(fcstData);
+            navigationManager.showWeatherDisplay(fcstData, () -> {
+                goToInitialScreen();
+            });
         });
     }
 

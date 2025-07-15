@@ -27,8 +27,8 @@ public class NavigationManager {
      * @param   fcstData
      *          WeatherDisplay에 출력하기 위한 기상 예보 정보를 매개변수로 받는다.
      */
-    public void showWeatherDisplay(FcstData fcstData) {
-        switchFrame(new WeatherDisplayGUI(fcstData));
+    public void showWeatherDisplay(FcstData fcstData, Runnable onNext) {
+        switchFrame(new WeatherDisplayGUI(fcstData, onNext));
     }
     
     /**
