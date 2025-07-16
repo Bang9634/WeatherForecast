@@ -2,6 +2,8 @@ package com.bang9634.gui;
 
 import com.bang9634.Config;
 import com.bang9634.WeatherApiClient;
+import com.bang9634.util.ConfigConstants;
+import com.bang9634.util.MsgConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +28,7 @@ public class ServiceKeyInputGUI extends JFrame {
      */
     public ServiceKeyInputGUI(Runnable onSuccess) {
         this.onSuccess = onSuccess;
-        setTitle("Service Key 입력");
+        setTitle(MsgConstants.TITLE);
         setSize(350, 150);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -35,8 +37,8 @@ public class ServiceKeyInputGUI extends JFrame {
          * 키를 입력할 텍스트 필드, 버튼, 메세지를 띄울 라벨을 선언한다.
          */
         keyField = new JTextField(25);
-        submitButton = new JButton("확인");
-        statusLabel = new JLabel("서비스 키를 입력하세요");
+        submitButton = new JButton(MsgConstants.BUTTON_ACCEPT);
+        statusLabel = new JLabel(MsgConstants.MSG_INPUT_SERVICE_KEY);
 
         /**
          * DocumentListener는 텍스트 필드의 이벤트를 감지하는 리스너로
@@ -52,7 +54,7 @@ public class ServiceKeyInputGUI extends JFrame {
 
             /** 위 이벤트들이 감지될 때마다 statusLabel을 초기화한다. */
             private void resetStatus() {
-                statusLabel.setText("서비스 키를 입력하세요");
+                statusLabel.setText(MsgConstants.MSG_INPUT_SERVICE_KEY);
             }
         });
         
@@ -84,20 +86,20 @@ public class ServiceKeyInputGUI extends JFrame {
         /** keyField가 비어져있으면, 서비스키 입력 메세지를 statusLabel에 출력한다. */
         String key = keyField.getText().trim();
         if (key.isEmpty()) {
-            statusLabel.setText("서비스키를 입력하세요.");
+            statusLabel.setText(MsgConstants.MSG_INPUT_SERVICE_KEY);
             return;
         }
 
         WeatherApiClient client = new WeatherApiClient(key);
         if (client.isValiedServiceKey()) {
             /** serviceKey가 유효하면 Config 파일에 SERVICE_KEY에 해당 serviceKey를 덮어씌운다. */
-            Config.setConfig("SERVICE_KEY", key);
+            Config.setConfig(ConfigConstants.SERVICE_KEY, key);
 
             /** 인증 성공을 statusLabel에 출력하고 창을 해제(release)한다. */
-            statusLabel.setText("인증 성공");
+            statusLabel.setText(MsgConstants.MSG_AUTH_SUCCESS);
 
             /** 인증 성공 팝업을 띄운다. */
-            JOptionPane.showMessageDialog(this, "인증 성공", "알림", JOptionPane.PLAIN_MESSAGE, null);
+            JOptionPane.showMessageDialog(this, MsgConstants.MSG_AUTH_SUCCESS, MsgConstants.NOTICE, JOptionPane.PLAIN_MESSAGE, null);
 
             dispose();
 
@@ -106,7 +108,7 @@ public class ServiceKeyInputGUI extends JFrame {
         }
         else {
             /** 인증 실패 팝업을 띄운다. */
-            JOptionPane.showMessageDialog(this, "인증 실패", "오류",JOptionPane.PLAIN_MESSAGE, null);
+            JOptionPane.showMessageDialog(this, MsgConstants.MSG_AUTH_FAIL, MsgConstants.ERROR, JOptionPane.PLAIN_MESSAGE, null);
             
             /** 
              * 한글 입력 시 한글IME와 Swing 호환성 문제로 포커스를 잃고 잠시 정지하는 현상이 존재한다.
@@ -115,7 +117,7 @@ public class ServiceKeyInputGUI extends JFrame {
             keyField.requestFocusInWindow();
 
             /** 유효하지 않은키면 인증 실패를 statusLabel에 출력한다. */
-            statusLabel.setText("인증 실패");
+            statusLabel.setText(MsgConstants.MSG_AUTH_FAIL);
         }
     }
 }

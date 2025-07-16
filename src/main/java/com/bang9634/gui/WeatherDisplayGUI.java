@@ -3,6 +3,8 @@ package com.bang9634.gui;
 import com.bang9634.FcstData;
 import com.bang9634.Config;
 import com.bang9634.util.ConfigConstants;
+import com.bang9634.util.GridCoordinateReader;
+import com.bang9634.util.MsgConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,15 +21,15 @@ public class WeatherDisplayGUI extends JFrame {
     private JComboBox<String> coordComboBox1;
     // private JComboBox<String> coordComboBox2;
     // private JComboBox<String> coordComboBox3;
+    private static Map<String, int[]> regionMap = GridCoordinateReader.readRegionCoordinates();
 
-    private static final String[] REGIONS = {"서울", "부산", "대구", "경북"};
     /**
      * GUI 생성자
      */
     public WeatherDisplayGUI(FcstData fcstData, Runnable onNext) {
         this.onNext = onNext;
         /** 창 크기와 CloseOperation 및 등장 위치를 초기화한다. */
-        setTitle("Weather Forecast");
+        setTitle(MsgConstants.TITLE);
         setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -38,17 +40,26 @@ public class WeatherDisplayGUI extends JFrame {
         add(new JScrollPane(textArea), BorderLayout.CENTER);
 
         /** 서비스 키 초기화를 위한 버튼을 선언한다. */
-        initServiceKeyButton = new JButton("서비스 키 초기화");
+        initServiceKeyButton = new JButton(MsgConstants.BUTTON_INIT_SERVICE_KEY);
         /** 
          * 서비스 키 초기화 버튼 액션 리스너를 추가한다.
          * 액션 감지시 onInitServiceKey 메서드를 호출한다.
          */
         initServiceKeyButton.addActionListener(this::onInitServiceKey);
 
-        coordComboBox1 = new JComboBox<>(REGIONS);
+
+        coordComboBox1 = new JComboBox<>(regionMap.keySet().toArray(new String[0]));
         coordComboBox1.setSelectedItem(0);
+
         coordComboBox1.addActionListener(e -> {
-            System.out.println("ComboBox action");
+            String selectedRegion = (String) coordComboBox1.getSelectedItem();
+            int[] coords = regionMap.get(selectedRegion);
+            if (coords != null) {
+                int nx = coords[0];
+                int ny = coords[1];
+                System.out.println(selectedRegion + " nx: " + nx + " ny: " + ny);
+            }
+
         });
         
         /** 패널을 추가하고, 패널에 텍스트 구역 등을 추가한다. */
@@ -89,6 +100,7 @@ public class WeatherDisplayGUI extends JFrame {
      */
     private void onInitServiceKey(ActionEvent e) {
         Config.setConfig(ConfigConstants.SERVICE_KEY, "");
+        JOptionPane.showMessageDialog(this, MsgConstants.MSG_DIALOG_INIT_SERVICE_KEY, MsgConstants.NOTICE ,JOptionPane.PLAIN_MESSAGE, null);
         if (onNext != null) onNext.run();
     }
 }
