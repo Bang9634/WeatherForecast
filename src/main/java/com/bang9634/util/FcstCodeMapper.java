@@ -1,7 +1,8 @@
 package com.bang9634.util;
 
-import com.bang9634.Item; // getSubMappingTableValue()에서 사용
 import java.util.Map; // Map을 사용
+
+import com.bang9634.model.Item;
 
 /** 
  * 기상예보 코드값의 의미를 매핑한 테이블을 가진 클래스. <p>

@@ -1,7 +1,7 @@
 package com.bang9634.util;
 
-import com.bang9634.Item; // 기상예보 데이터 전달을 위한 클래스
-import com.bang9634.FcstData; // 기상예보 데이터를 저장하기 위한 클래스
+import com.bang9634.model.FcstData;
+import com.bang9634.model.Item;
 import com.fasterxml.jackson.databind.JsonNode; // JSON 파싱
 import com.fasterxml.jackson.databind.ObjectMapper; // JSON 파싱
 import java.util.List; // 기상예보 데이터를 저장

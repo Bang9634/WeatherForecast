@@ -1,6 +1,7 @@
 package com.bang9634;
 
 import com.bang9634.gui.NavigationManager;
+import com.bang9634.model.FcstData;
 import com.bang9634.util.*;
 
 /**

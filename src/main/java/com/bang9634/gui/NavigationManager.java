@@ -1,8 +1,8 @@
 package com.bang9634.gui;
 
-import com.bang9634.FcstData;
-
 import javax.swing.*;
+
+import com.bang9634.model.FcstData;
 
 /**
  * 화면 전환을 담당하는 클래스
