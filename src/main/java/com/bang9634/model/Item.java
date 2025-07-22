@@ -1,4 +1,4 @@
-package com.bang9634;
+package com.bang9634.model;
 
 /**
  * 기상청 API로 요청한 단기예보 JSON 데이터에서 필요한 정보만 추출하여 저장, 전달을 하기위한 클래스. <p>
