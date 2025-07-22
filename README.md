@@ -1,11 +1,13 @@
+# Weather Forecast GUI Application
+
 ## Introduction
 
-This program displays weather forecast information for South Korea.  
+This program displays weather forecast information for South Korea using the official public API.  
 A personal API authentication key is required.  
 You can receive an authentication key for free from [here](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15084084).
 
-Just run the program and enter your authentication key in the text box.  
-If the authentication key is valid, the forecast information will be displayed.
+- Select your region, city, and district using the combo boxes.
+- The weather forecast for the selected area will be displayed in real time.
 
 ## Development Environment
 
@@ -15,15 +17,22 @@ If the authentication key is valid, the forecast information will be displayed.
 
 ## How to Run
 
-1. Build the project with Maven:
+1. **Build the project with Maven:**
     ```
     mvn clean package
     ```
-2. Run the application:
+2. **Run the application:**
     ```
     java -jar target/weather-1.0.jar
     ```
-3. Enter your authentication key when prompted.
+3. **Enter your authentication key** when prompted.
+
+## Features
+
+- GUI-based weather forecast viewer for South Korea
+- Region/city/district selection via combo boxes
+- Real-time weather data retrieval from the public API
+- Authentication key management (stored in your home directory)
 
 ## Configuration
 
@@ -34,6 +43,7 @@ If the authentication key is valid, the forecast information will be displayed.
 - `src/main/java/com/bang9634/` : Main application source code
 - `src/main/java/com/bang9634/gui/` : GUI components
 - `src/main/java/com/bang9634/util/` : Utility classes
+- `src/main/java/com/bang9634/model/` : Data model classes
 
 ## License
 
