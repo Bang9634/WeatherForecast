@@ -51,7 +51,7 @@ public class AppController {
     private static void goToWeatherDisplay() {
         String serviceKey = Config.getConfig(ConfigConstants.SERVICE_KEY);
         javax.swing.SwingUtilities.invokeLater(() -> {
-            FcstData fcstData = fetchWeatherData(serviceKey);
+            FcstData fcstData = fetchWeatherData(serviceKey, "60", "127");
             navigationManager.showWeatherDisplay(fcstData, () -> {
                 goToInitialScreen();
             });
@@ -63,12 +63,15 @@ public class AppController {
      * 
      * @return  성공적으로 API 요청을 수행 및 응답을 반환한다. 예외 발생시 null을 반환한다.
      */
-    private static FcstData fetchWeatherData(String serviceKey) {
-        String nx = "60";
-        String ny = "127";
+    public static FcstData fetchWeatherData(String serviceKey, String nx, String ny) {
         WeatherApiClient client = new WeatherApiClient(serviceKey);
         try {
-            String json = client.getWeather(WeatherConstants.LABEL_BASE_DATE, WeatherConstants.LABEL_BASE_TIME, nx, ny);
+            String json = client.getWeather(
+                WeatherConstants.LABEL_BASE_DATE, 
+                WeatherConstants.LABEL_BASE_TIME, 
+                nx, 
+                ny
+                );
             return FcstDataReader.getVilageFcstData(FcstDataReader.parseVilageFcstJsonData(json));
         } catch (Exception e) {
             e.printStackTrace();
