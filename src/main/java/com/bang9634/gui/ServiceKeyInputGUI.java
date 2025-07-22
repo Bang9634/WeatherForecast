@@ -22,28 +22,21 @@ public class ServiceKeyInputGUI extends JFrame {
      * GUI 생성자 <p>
      * 창크기의 설정과 메시지 및 버튼생성, 버튼에 액션 리스너를 추가한다.
      * 매개 변수로는 유효성 검사 통과 시 실행할 코드 블록(다음 동작)을 받는다.
+     * TODO: 컴포넌트 생성, 레이아웃 구성, 이벤트 리스너 등록 등 각 메서드로 분리해서 작성하기
      * 
      * @param   onSuccess
      *          ServiceKeyInputGUI 생성자 호출 후, serviceKey가 유효할 때 실행할 코드 블록을 뜻하는 콜백 패턴이다.
      */
     public ServiceKeyInputGUI(Runnable onSuccess) {
         this.onSuccess = onSuccess;
-        setTitle(MsgConstants.TITLE);
-        setSize(350, 150);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
 
-        /**
-         * 키를 입력할 텍스트 필드, 버튼, 메세지를 띄울 라벨을 선언한다.
-         */
+        /** 컴포넌트 생성 */
         keyField = new JTextField(25);
         submitButton = new JButton(MsgConstants.BUTTON_ACCEPT);
         statusLabel = new JLabel(MsgConstants.MSG_INPUT_SERVICE_KEY);
 
-        /**
-         * DocumentListener는 텍스트 필드의 이벤트를 감지하는 리스너로
-         * 상황에 맞게 statusLabel을 초기화한다.
-         */
+        /** 이벤트 리스너 등록 */
+        submitButton.addActionListener(this::onSubmit);
         keyField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             /** 텍스트가 추가될 때 */
             public void insertUpdate(javax.swing.event.DocumentEvent e) { resetStatus(); }
@@ -51,32 +44,32 @@ public class ServiceKeyInputGUI extends JFrame {
             public void removeUpdate(javax.swing.event.DocumentEvent e) { resetStatus(); }
             /** 속성이 변경될 때 */
             public void changedUpdate(javax.swing.event.DocumentEvent e) { resetStatus(); }
-
             /** 위 이벤트들이 감지될 때마다 statusLabel을 초기화한다. */
             private void resetStatus() {
                 statusLabel.setText(MsgConstants.MSG_INPUT_SERVICE_KEY);
             }
         });
-        
-        /** 
-         * 버튼에 액션 리스너를 추가한다.
-         * 버튼이 액션을 감지하면 onSubmit() 메서드를 호출한다.
-         */
-        submitButton.addActionListener(this::onSubmit);
 
-        /** Service Key : 메세지를 띄울 패널을 추가한다. */
-        JPanel panel = new JPanel();
-        panel.add(new JLabel("Service Key : "));
-        panel.add(keyField);
-        panel.add(submitButton);
-
+        /** 레이아웃 및 패널 구성 */
+        setTitle(MsgConstants.TITLE);
+        setSize(350, 150);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
         setLayout(new BorderLayout());
-        add(panel, BorderLayout.CENTER);
 
-        /** statusLabel 중앙 아래로 정렬해 추가한다. */
+        /** 메세지 패널 */
+        JPanel msgPanel = new JPanel();
+        msgPanel.add(new JLabel("Service Key : "));
+        msgPanel.add(keyField);
+        msgPanel.add(submitButton);
+
+        /** 상태창 패널 */
         JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         statusPanel.add(statusLabel);
+
+        /** 패널 add */
         add(statusPanel, BorderLayout.SOUTH);
+        add(msgPanel, BorderLayout.CENTER);
     }
 
     /**
