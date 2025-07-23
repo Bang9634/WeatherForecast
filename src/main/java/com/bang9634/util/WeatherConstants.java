@@ -7,11 +7,7 @@ public class WeatherConstants {
     public static final String LABEL_FCST_DATE = "예보일자";
     public static final String LABEL_FCST_TIME = "예보시각";
 
-    /** 
-     * 기기의 현재 LocalTime을 상수로 정의한다. 프로그램 실행 시 정의되어 고정된다.
-     * 
-     * TODO: 프로그램 실행 시간으로 고정되기에 추후 수정
-     */
+    /** 기기의 현재 LocalTime을 상수로 정의한다. 프로그램 실행 시 정의되어 고정된다. */
     public static final String LABEL_BASE_DATE = java.time.LocalDate.now()
         .format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd"));
 
