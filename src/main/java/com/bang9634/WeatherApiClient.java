@@ -71,7 +71,7 @@ public class WeatherApiClient {
      *          nx = 예보지점 X 좌표 <p>
      *          ny = 예보지점 Y 좌표 <p>
      */
-    public String getWeather(String baseDate, String baseTime, String nx, String ny) throws Exception {
+    public String requestWeatherJson(String baseDate, String baseTime, String nx, String ny) throws Exception {
 
         /** 전달할 정보를 포함한 요청메세지(url)를 선언한다. */
         String url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst" // 단기예보조희 API
@@ -136,7 +136,7 @@ public class WeatherApiClient {
      */
     public boolean isValiedServiceKey() {
         try {
-            this.getWeather(WeatherConstants.LABEL_BASE_DATE, WeatherConstants.LABEL_BASE_TIME, "60", "127");
+            this.requestWeatherJson(WeatherConstants.LABEL_BASE_DATE, WeatherConstants.LABEL_BASE_TIME, "60", "127");
             return true;
         } catch (Exception e) {
             return false;

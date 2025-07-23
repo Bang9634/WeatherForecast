@@ -66,7 +66,7 @@ public class AppController {
     public static FcstData fetchWeatherData(String serviceKey, String nx, String ny) {
         WeatherApiClient client = new WeatherApiClient(serviceKey);
         try {
-            String json = client.getWeather(
+            String json = client.requestWeatherJson(
                 WeatherConstants.LABEL_BASE_DATE, 
                 WeatherConstants.LABEL_BASE_TIME, 
                 nx, 
