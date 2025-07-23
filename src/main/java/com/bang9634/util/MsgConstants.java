@@ -12,6 +12,7 @@ public class MsgConstants {
     public static final String MSG_INPUT_SERVICE_KEY = "서비스 키를 입력하세요.";
     public static final String MSG_AUTH_SUCCESS = "인증 성공";
     public static final String MSG_AUTH_FAIL = "인증 실패";
+    public static final String MSG_MISSING_VALUE = "데이터 누락";
 
     
 }

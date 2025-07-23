@@ -2,8 +2,10 @@ package com.bang9634.util;
 
 import com.bang9634.model.FcstData;
 import com.bang9634.model.Item;
+
 import com.fasterxml.jackson.databind.JsonNode; // JSON 파싱
 import com.fasterxml.jackson.databind.ObjectMapper; // JSON 파싱
+
 import java.util.List; // 기상예보 데이터를 저장
 import java.util.ArrayList; // 기상예보 데이터를 저장
 
@@ -12,8 +14,6 @@ import java.util.ArrayList; // 기상예보 데이터를 저장
  * 
  * JSON데이터를 파싱하거나 데이터를 정리하는 함수들을 포함하고 있다. <p>
  * 파싱 관련 함수를 구현하기 위해 외부 라이브러리(Jackson)을 의존한다. <p>
- * 
- * TODO: +900 이상, -900이하 값은 Missing 값으로 처리해야함.
  */
 public class FcstDataReader {
 
@@ -53,6 +53,7 @@ public class FcstDataReader {
                 String fcstTime = item.path("fcstTime").asText();
                 String category = item.path("category").asText();
                 String fcstValue = item.path("fcstValue").asText();
+                fcstValue = handleMissingValue(fcstValue);
                 fcstItems.add(new Item(fcstDate, fcstTime, category, fcstValue));
             }
             
@@ -102,5 +103,26 @@ public class FcstDataReader {
             }
         }
         return fcstData;
+    }
+
+    /** 
+     * missing 값을 제어하는 메서드이다. <p>
+     * 
+     * 매개변수 value가 missing 값이라면 MsgConstants.MSG_MISSING_VALUE 문자열을 반환하고,
+     * 그렇지않다면 value를 그대로 반환한다.
+     * 
+     * @param   value
+     *          missing value인지 확인할 값을 넘긴다.
+     * 
+     * @return  값이 missing value면 Msg.Constatns.MSG_MISSING_VALUE를,
+     *          그렇지않다면 value를 그대로 반환한다.
+     */
+    private static String handleMissingValue(String value) {
+        if (CommonUtils.isMissingValue(value)) {
+            return MsgConstants.MSG_MISSING_VALUE;
+        }
+        else {
+            return value;
+        }
     }
 }
