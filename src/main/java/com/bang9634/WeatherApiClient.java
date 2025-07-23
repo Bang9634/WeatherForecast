@@ -100,6 +100,8 @@ public class WeatherApiClient {
          * XML로 API응답이 왔을 경우,
          * SERVICE_KEY_IS_NOT_REGISTERED_ERROR 메세지가 포함되어있으면 예외를 던지고 인증키 에러 메세지를 출력한다.
          * 그 외의 경우는 JSON 데이터 타입이 아니므로, 예외를 던지고 XML 에러 응답을 출력한다.
+         * 
+         * TODO: basetime이 아직 예보가 없는 경우와 같이 NODATA 에러도 XML로 옴. 예외처리 추가적으로 필요
          */
         if (responseBody.trim().startsWith("<")) {
             if (responseBody.contains("SERVICE_KEY_IS_NOT_REGISTERED_ERROR")) {
