@@ -116,6 +116,7 @@ public class ServiceKeyInputGUI extends JFrame {
 
         WeatherApiClient client = new WeatherApiClient(key);
         if (client.isValiedServiceKey()) {
+            /** 로그인 유지 체크박스가 선택되어있으면 Config파일의 KEEP_LOGIN에 true, 아니면 false를 저장한다. */
             if (keepLoginCheckBox.isSelected()) {
                 Config.setConfig(ConfigConstants.KEEP_LOGIN, ConfigConstants.TRUE);
             } else {
