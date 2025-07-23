@@ -151,9 +151,6 @@ public class WeatherDisplayGUI extends JFrame {
             for (String city : cityMap.keySet()) {
                 cityCoordComboBox.addItem(city);
             }
-            for (String street : cityMap.get(cityCoordComboBox.getSelectedItem()).keySet()) {
-                streetCoordComboBox.addItem(street);
-            }
             updateWeatherBySelectedComboBox();
         }
     }
