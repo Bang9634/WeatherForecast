@@ -25,81 +25,17 @@ public class WeatherDisplayGUI extends JFrame {
 
     /**
      * GUI 생성자
-     * 
-     * * TODO: 컴포넌트 생성, 레이아웃 구성, 이벤트 리스너 등록 등 각 메서드로 분리해서 작성하기
      */
     public WeatherDisplayGUI(FcstData fcstData, Runnable onNext) {
         this.onNext = onNext;
-
-        /** 컴포넌트 생성 */
-        textArea = new JTextArea();     
-        textArea.setEditable(false);
-        textArea.setFont(new Font("AppleGothic", Font.PLAIN, 12));
-        initServiceKeyButton = new JButton(MsgConstants.BUTTON_INIT_SERVICE_KEY);
-        regionCoordComboBox = new JComboBox<>(GridCoordinateReader.ADDRESS_COORD_TREE
-            .keySet()
-            .toArray(new String[0]));
-
-        cityCoordComboBox = new JComboBox<>(GridCoordinateReader.ADDRESS_COORD_TREE
-            .get(regionCoordComboBox.getSelectedItem())
-            .keySet()
-            .toArray(new String[0]));
-
-        streetCoordComboBox = new JComboBox<>(GridCoordinateReader.ADDRESS_COORD_TREE
-            .get(regionCoordComboBox.getSelectedItem())
-            .get(cityCoordComboBox.getSelectedItem())
-            .keySet()
-            .toArray(new String[0]));
-
-        /** 이벤트 리스너 등록 */
-        initServiceKeyButton.addActionListener(this::onInitServiceKey);
-        regionCoordComboBox.addActionListener(this::onRegionSelected);
-        cityCoordComboBox.addActionListener(this::onCitySelected);
-        streetCoordComboBox.addActionListener(this::onStreetSelected);
-
-        /** 레이아웃 및 패널 구성 */
-        setTitle(MsgConstants.TITLE);
-        setSize(400, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
-
-        /** 텍스트 영역 스크롤 포함 */
+        initComponents();
+        initListeners();
+        initLayout();
+        /** 텍스트 영역 스크롤 add */
         add(new JScrollPane(textArea), BorderLayout.CENTER);
-        JScrollPane textScrollPane = new JScrollPane(textArea);
-            
-        /** 콤보박스 패널 */
-        JPanel comboBoxPanel = new JPanel();
-        comboBoxPanel.setLayout(new BoxLayout(comboBoxPanel, BoxLayout.Y_AXIS));
-        comboBoxPanel.setAlignmentY(Component.TOP_ALIGNMENT);
-        regionCoordComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-        cityCoordComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-        streetCoordComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        comboBoxPanel.add(regionCoordComboBox);
-        comboBoxPanel.add(Box.createVerticalStrut(4));
-        comboBoxPanel.add(cityCoordComboBox);
-        comboBoxPanel.add(Box.createVerticalStrut(4));
-        comboBoxPanel.add(streetCoordComboBox);
-        comboBoxPanel.setMaximumSize(new Dimension(200, 150));
-        comboBoxPanel.add(Box.createVerticalGlue());
-        comboBoxPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-
-        /** 메인 패널 */
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
-        mainPanel.add(textScrollPane);
-        mainPanel.add(Box.createHorizontalStrut(10));
-        mainPanel.add(comboBoxPanel);
-
-        /** 버튼 패널 */
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.add(initServiceKeyButton);
-
         /** 패널 add */
-        add(mainPanel, BorderLayout.CENTER);
-        add(buttonPanel, BorderLayout.SOUTH);
-
+        add(createMainPanel(), BorderLayout.CENTER);
+        add(createButtonPanel(), BorderLayout.SOUTH);
         /** 데이터 set */
         setWeatherData(fcstData);
     }
@@ -119,6 +55,102 @@ public class WeatherDisplayGUI extends JFrame {
                 .append("\n");
         }
         textArea.setText(sb.toString());
+    }
+
+    /**
+     * 컴포넌트를 초기화한다.
+     */
+    private void initComponents() {
+        textArea = new JTextArea();     
+        textArea.setEditable(false);
+        textArea.setFont(new Font("AppleGothic", Font.PLAIN, 12));
+        initServiceKeyButton = new JButton(MsgConstants.BUTTON_INIT_SERVICE_KEY);
+        regionCoordComboBox = new JComboBox<>(GridCoordinateReader.ADDRESS_COORD_TREE
+            .keySet()
+            .toArray(new String[0]));
+
+        cityCoordComboBox = new JComboBox<>(GridCoordinateReader.ADDRESS_COORD_TREE
+            .get(regionCoordComboBox.getSelectedItem())
+            .keySet()
+            .toArray(new String[0]));
+
+        streetCoordComboBox = new JComboBox<>(GridCoordinateReader.ADDRESS_COORD_TREE
+            .get(regionCoordComboBox.getSelectedItem())
+            .get(cityCoordComboBox.getSelectedItem())
+            .keySet()
+            .toArray(new String[0]));
+    }
+
+    /**
+     * 이벤트 리스너를 초기화한다.
+     */
+    private void initListeners() {
+        initServiceKeyButton.addActionListener(this::onInitServiceKey);
+        regionCoordComboBox.addActionListener(this::onRegionSelected);
+        cityCoordComboBox.addActionListener(this::onCitySelected);
+        streetCoordComboBox.addActionListener(this::onStreetSelected);
+    }
+
+    /**
+     * 레이아웃을 초기화한다.
+     */
+    private void initLayout() {
+        setTitle(MsgConstants.TITLE);
+        setSize(400, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
+    }
+
+    /**
+     * 콤보 박스 패널을 만든다.
+     * 
+     * @return  콤보 박스 패널 객체를 반환한다.
+     */
+    private JPanel createComoboBoxPanel() {
+        JPanel comboBoxPanel = new JPanel();
+        comboBoxPanel.setLayout(new BoxLayout(comboBoxPanel, BoxLayout.Y_AXIS));
+        comboBoxPanel.setAlignmentY(Component.TOP_ALIGNMENT);
+        regionCoordComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+        cityCoordComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+        streetCoordComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        comboBoxPanel.add(regionCoordComboBox);
+        comboBoxPanel.add(Box.createVerticalStrut(4));
+        comboBoxPanel.add(cityCoordComboBox);
+        comboBoxPanel.add(Box.createVerticalStrut(4));
+        comboBoxPanel.add(streetCoordComboBox);
+        comboBoxPanel.setMaximumSize(new Dimension(200, 150));
+        comboBoxPanel.add(Box.createVerticalGlue());
+        comboBoxPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        return comboBoxPanel;
+    }
+
+    /**
+     * 메인 패널을 만든다.
+     * 
+     * @return  메인 패널 객체를 반환한다.
+     */
+    private JPanel createMainPanel() {
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+        /** 메인 패널에 스크롤 가능한 텍스트 영역을 추가한다. */
+        mainPanel.add(new JScrollPane(textArea));
+        mainPanel.add(Box.createHorizontalStrut(10));
+        /** 메인 패널에 콤보 박스 패널을 추가한다. */
+        mainPanel.add(createComoboBoxPanel());
+        return mainPanel;
+    }
+
+    /**
+     * 버튼 패널을 만든다.
+     * 
+     * @return  버튼 패널 객체를 반환한다.
+     */
+    private JPanel createButtonPanel() {
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(initServiceKeyButton);
+        return buttonPanel;
     }
 
     /**

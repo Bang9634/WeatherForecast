@@ -22,20 +22,33 @@ public class ServiceKeyInputGUI extends JFrame {
      * GUI 생성자 <p>
      * 창크기의 설정과 메시지 및 버튼생성, 버튼에 액션 리스너를 추가한다.
      * 매개 변수로는 유효성 검사 통과 시 실행할 코드 블록(다음 동작)을 받는다.
-     * TODO: 컴포넌트 생성, 레이아웃 구성, 이벤트 리스너 등록 등 각 메서드로 분리해서 작성하기
      * 
      * @param   onSuccess
      *          ServiceKeyInputGUI 생성자 호출 후, serviceKey가 유효할 때 실행할 코드 블록을 뜻하는 콜백 패턴이다.
      */
     public ServiceKeyInputGUI(Runnable onSuccess) {
         this.onSuccess = onSuccess;
+        initComponents();
+        initListeners();
+        initLayout();
+        /** 패널 add */
+        add(createMsgPanel(), BorderLayout.SOUTH);
+        add(createStatusPanel(), BorderLayout.CENTER);
+    }
 
-        /** 컴포넌트 생성 */
+    /**
+     * 컴포넌트를 초기화한다.
+     */
+    private void initComponents() {
         keyField = new JTextField(25);
         submitButton = new JButton(MsgConstants.BUTTON_ACCEPT);
         statusLabel = new JLabel(MsgConstants.MSG_INPUT_SERVICE_KEY);
+    }
 
-        /** 이벤트 리스너 등록 */
+    /**
+     * 이벤트 리스너를 초기화한다.
+     */
+    private void initListeners() {
         submitButton.addActionListener(this::onSubmit);
         keyField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             /** 텍스트가 추가될 때 */
@@ -49,31 +62,46 @@ public class ServiceKeyInputGUI extends JFrame {
                 statusLabel.setText(MsgConstants.MSG_INPUT_SERVICE_KEY);
             }
         });
+    }
 
-        /** 레이아웃 및 패널 구성 */
+    /**
+     * 레이아웃을 초기화한다.
+     */
+    private void initLayout() {
         setTitle(MsgConstants.TITLE);
         setSize(350, 150);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+    }
 
-        /** 메세지 패널 */
+    /**
+     * 메세지 패널을 만든다.
+     * 
+     * @return  메세지 패널 객체를 반환한다.
+     */
+    private JPanel createMsgPanel() {
         JPanel msgPanel = new JPanel();
         msgPanel.add(new JLabel("Service Key : "));
         msgPanel.add(keyField);
         msgPanel.add(submitButton);
-
-        /** 상태창 패널 */
+        return msgPanel;
+    }
+    
+    /**
+     * 상태 패널을 만든다.
+     * 
+     * @return  상태 패널 객체를 반환한다.
+     */
+    private JPanel createStatusPanel() {
         JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         statusPanel.add(statusLabel);
-
-        /** 패널 add */
-        add(statusPanel, BorderLayout.SOUTH);
-        add(msgPanel, BorderLayout.CENTER);
+        return statusPanel;
     }
 
+
     /**
-     * 버튼 클릭 액션을 감지했을 때 실행되는 메서드. <p>      
+     * 버튼 클릭 액션을 감지했을 때 실행된다. <p>      
      */
     private void onSubmit(ActionEvent e) {
         /** keyField가 비어져있으면, 서비스키 입력 메세지를 statusLabel에 출력한다. */
