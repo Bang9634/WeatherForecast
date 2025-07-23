@@ -9,6 +9,8 @@ import com.bang9634.model.Item;
  * 
  * 키에는 각 코드와 값에는 의미가 매핑되어있으며, 모든 값들은 불변(immutable)이다. <p>
  * get() 메서드를 호출하여 각 코드 값과 매핑된 데이터를 읽을 수 있다. <p>
+ * 
+ * TODO: JSON과 같은 외부파일로 만들어 관리. 상수들도 properties 파일로 관리하기.
  */
 public class FcstCodeMapper {
     /** 
