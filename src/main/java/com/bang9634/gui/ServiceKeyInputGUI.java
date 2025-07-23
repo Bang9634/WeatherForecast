@@ -32,8 +32,8 @@ public class ServiceKeyInputGUI extends JFrame {
         initListeners();
         initLayout();
         /** 패널 add */
-        add(createMsgPanel(), BorderLayout.SOUTH);
-        add(createStatusPanel(), BorderLayout.CENTER);
+        add(createStatusPanel(), BorderLayout.SOUTH);
+        add(createMsgPanel(), BorderLayout.CENTER);
     }
 
     /**
