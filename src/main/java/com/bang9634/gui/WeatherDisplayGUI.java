@@ -38,6 +38,14 @@ public class WeatherDisplayGUI extends JFrame {
         add(createButtonPanel(), BorderLayout.SOUTH);
         /** 데이터 set */
         setWeatherData(fcstData);
+
+        KeyStroke closeKey = KeyStroke.getKeyStroke("meta W"); // macOS용
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(closeKey, "closeWindow");
+        getRootPane().getActionMap().put("closeWindow", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
     }
 
     /** 

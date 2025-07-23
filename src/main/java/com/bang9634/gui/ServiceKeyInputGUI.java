@@ -10,6 +10,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
+ * TODO: baseFrame 만들어서 닫기 단축키나레이아웃 등등 상속해주는 인터페이스 만들기
+ */
+
+/**
  * ServiceKey를 입력하는 화면을 출력하는 GUI 클래스
  */
 public class ServiceKeyInputGUI extends JFrame {
@@ -35,6 +39,14 @@ public class ServiceKeyInputGUI extends JFrame {
         /** 패널 add */
         add(createStatusPanel(), BorderLayout.SOUTH);
         add(createMsgPanel(), BorderLayout.CENTER);
+
+        KeyStroke closeKey = KeyStroke.getKeyStroke("meta W"); // macOS용
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(closeKey, "closeWindow");
+        getRootPane().getActionMap().put("closeWindow", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
     }
 
     /**
