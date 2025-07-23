@@ -32,7 +32,9 @@ public class WeatherDisplayGUI extends JFrame {
         this.onNext = onNext;
 
         /** 컴포넌트 생성 */
-        textArea = new JTextArea();     textArea.setEditable(false);
+        textArea = new JTextArea();     
+        textArea.setEditable(false);
+        textArea.setFont(new Font("AppleGothic", Font.PLAIN, 12));
         initServiceKeyButton = new JButton(MsgConstants.BUTTON_INIT_SERVICE_KEY);
         regionCoordComboBox = new JComboBox<>(GridCoordinateReader.ADDRESS_COORD_TREE
             .keySet()
