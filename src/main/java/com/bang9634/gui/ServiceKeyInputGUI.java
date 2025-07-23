@@ -64,6 +64,7 @@ public class ServiceKeyInputGUI extends JFrame {
                 statusLabel.setText(MsgConstants.MSG_INPUT_SERVICE_KEY);
             }
         });
+        keyField.addActionListener(this::onSubmit);
     }
 
     /**
