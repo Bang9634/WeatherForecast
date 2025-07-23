@@ -13,6 +13,7 @@ public class MsgConstants {
     public static final String MSG_AUTH_SUCCESS = "인증 성공";
     public static final String MSG_AUTH_FAIL = "인증 실패";
     public static final String MSG_MISSING_VALUE = "데이터 누락";
+    public static final String MSG_KEEP_LOGIN = "로그인 유지";
 
     
 }

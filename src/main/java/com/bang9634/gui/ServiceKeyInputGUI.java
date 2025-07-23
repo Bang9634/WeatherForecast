@@ -17,6 +17,7 @@ public class ServiceKeyInputGUI extends JFrame {
     private JButton submitButton; /** submit 버튼 */
     private JLabel statusLabel; /** 상태창 */
     private Runnable onSuccess; /** 인증 성공 시 다음 동작을 담을 코드 블럭 변수 */
+    private JCheckBox keepLoginCheckBox; /** 로그인 유지 체크박스 */
 
     /** 
      * GUI 생성자 <p>
@@ -43,6 +44,7 @@ public class ServiceKeyInputGUI extends JFrame {
         keyField = new JTextField(25);
         submitButton = new JButton(MsgConstants.BUTTON_ACCEPT);
         statusLabel = new JLabel(MsgConstants.MSG_INPUT_SERVICE_KEY);
+        keepLoginCheckBox = new JCheckBox(MsgConstants.MSG_KEEP_LOGIN);
     }
 
     /**
@@ -85,6 +87,7 @@ public class ServiceKeyInputGUI extends JFrame {
         msgPanel.add(new JLabel("Service Key : "));
         msgPanel.add(keyField);
         msgPanel.add(submitButton);
+        msgPanel.add(keepLoginCheckBox);
         return msgPanel;
     }
     
@@ -113,6 +116,12 @@ public class ServiceKeyInputGUI extends JFrame {
 
         WeatherApiClient client = new WeatherApiClient(key);
         if (client.isValiedServiceKey()) {
+            if (keepLoginCheckBox.isSelected()) {
+                Config.setConfig(ConfigConstants.KEEP_LOGIN, ConfigConstants.TRUE);
+            } else {
+                Config.setConfig(ConfigConstants.KEEP_LOGIN, ConfigConstants.FALSE);
+            }
+            
             /** serviceKey가 유효하면 Config 파일에 SERVICE_KEY에 해당 serviceKey를 덮어씌운다. */
             Config.setConfig(ConfigConstants.SERVICE_KEY, key);
 

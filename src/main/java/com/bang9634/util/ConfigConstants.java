@@ -5,4 +5,7 @@ package com.bang9634.util;
  */
 public class ConfigConstants {
     public static final String SERVICE_KEY = "SERVICE_KEY";
+    public static final String KEEP_LOGIN = "KEEP_LOGIN";
+    public static final String TRUE = "true";
+    public static final String FALSE = "false";
 }
