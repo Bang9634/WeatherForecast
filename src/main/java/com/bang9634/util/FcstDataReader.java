@@ -12,6 +12,8 @@ import java.util.ArrayList; // 기상예보 데이터를 저장
  * 
  * JSON데이터를 파싱하거나 데이터를 정리하는 함수들을 포함하고 있다. <p>
  * 파싱 관련 함수를 구현하기 위해 외부 라이브러리(Jackson)을 의존한다. <p>
+ * 
+ * TODO: +900 이상, -900이하 값은 Missing 값으로 처리해야함.
  */
 public class FcstDataReader {
 
@@ -86,6 +88,10 @@ public class FcstDataReader {
              * 키를 찾아 키 값을 fcstDataCategory에 저장한다.
              */
             String fcstDataCategory = FcstCodeMapper.CATEGORY_CODE_MAP.get(item.category);
+
+            if (fcstDataCategory == null) {
+                fcstDataCategory = item.category;
+            }
 
             /** 키에 해당하는 값으로 변환시켜 fcstData에 put한다. */
             if (FcstCodeMapper.getSubMappingTableValue(item) != null) {
