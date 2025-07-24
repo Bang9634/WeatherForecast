@@ -1,9 +1,9 @@
 package com.bang9634.gui;
 
-import com.bang9634.Config;
-import com.bang9634.WeatherApiClient;
-import com.bang9634.util.ConfigConstants;
-import com.bang9634.util.MsgConstants;
+import com.bang9634.config.Config;
+import com.bang9634.provider.impl.PublicDataPortalProvider;
+import com.bang9634.util.constants.ConfigConstants;
+import com.bang9634.util.constants.MsgConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -127,7 +127,7 @@ public class ServiceKeyInputGUI extends JFrame {
             return;
         }
 
-        WeatherApiClient client = new WeatherApiClient(key);
+        PublicDataPortalProvider client = new PublicDataPortalProvider(key);
         if (client.isValiedServiceKey()) {
             /** 로그인 유지 체크박스가 선택되어있으면 Config파일의 KEEP_LOGIN에 true, 아니면 false를 저장한다. */
             if (keepLoginCheckBox.isSelected()) {

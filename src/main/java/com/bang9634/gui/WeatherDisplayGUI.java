@@ -1,11 +1,11 @@
 package com.bang9634.gui;
 
-import com.bang9634.Config;
+import com.bang9634.config.Config;
+import com.bang9634.controller.AppController;
 import com.bang9634.model.FcstData;
-import com.bang9634.util.ConfigConstants;
-import com.bang9634.util.GridCoordinateReader;
-import com.bang9634.util.MsgConstants;
-import com.bang9634.AppController;
+import com.bang9634.util.constants.ConfigConstants;
+import com.bang9634.util.constants.MsgConstants;
+import com.bang9634.util.reader.GridCoordinateReader;
 
 import javax.swing.*;
 import java.awt.*;

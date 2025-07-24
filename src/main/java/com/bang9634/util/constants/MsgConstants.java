@@ -1,4 +1,4 @@
-package com.bang9634.util;
+package com.bang9634.util.constants;
 
 /**
  * TODO: 외부 프로퍼티 파일로 분리하는 것이 표준적인 방법

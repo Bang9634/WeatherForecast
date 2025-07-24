@@ -44,6 +44,10 @@ You can receive an authentication key for free from [here](https://www.data.go.k
 - `src/main/java/com/bang9634/gui/` : GUI components
 - `src/main/java/com/bang9634/util/` : Utility classes
 - `src/main/java/com/bang9634/model/` : Data model classes
+- `src/main/java/com/bang9634/provider/` : Data provider classes
+- `src/main/java/com/bang9634/service/` : Business logics
+- `src/main/java/com/bang9634/config/` : Config classes
+- `src/main/java/com/bang9634/controller/` : Control program flow
 
 ## License
 

@@ -1,8 +1,12 @@
-package com.bang9634;
+package com.bang9634.controller;
 
+import com.bang9634.config.Config;
 import com.bang9634.gui.NavigationManager;
 import com.bang9634.model.FcstData;
-import com.bang9634.util.*;
+import com.bang9634.provider.impl.PublicDataPortalProvider;
+import com.bang9634.util.constants.ConfigConstants;
+import com.bang9634.util.constants.WeatherConstants;
+import com.bang9634.util.reader.FcstDataReader;
 
 /**
  * 전체 애플리케이션의 흐름을 담당하는 컨트롤러 클래스 <p>
@@ -23,7 +27,7 @@ public class AppController {
      */
     private static void goToInitialScreen() {
         String serviceKey = Config.getConfig(ConfigConstants.SERVICE_KEY);
-        if (!Config.isConfigFileExists() || !new WeatherApiClient(serviceKey).isValiedServiceKey()) {
+        if (!Config.isConfigFileExists() || !new PublicDataPortalProvider(serviceKey).isValiedServiceKey()) {
             goToServiceKeyInput();
         } else {
             goToWeatherDisplay();
@@ -66,7 +70,7 @@ public class AppController {
      * @return  성공적으로 API 요청을 수행 및 응답을 반환한다. 예외 발생시 null을 반환한다.
      */
     public static FcstData fetchWeatherData(String serviceKey, String nx, String ny) {
-        WeatherApiClient client = new WeatherApiClient(serviceKey);
+        PublicDataPortalProvider client = new PublicDataPortalProvider(serviceKey);
         try {
             String json = client.requestWeatherJson(
                 WeatherConstants.LABEL_BASE_DATE, 

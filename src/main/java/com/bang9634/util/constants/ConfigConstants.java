@@ -1,4 +1,4 @@
-package com.bang9634.util;
+package com.bang9634.util.constants;
 
 /**
  * Config 관련 상수를 모아놓은 클래스

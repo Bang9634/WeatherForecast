@@ -1,6 +1,8 @@
 package com.bang9634;
 
-import com.bang9634.util.ConfigConstants;
+import com.bang9634.config.Config;
+import com.bang9634.controller.AppController;
+import com.bang9634.util.constants.ConfigConstants;
 
 /**
  * TODO: 테스트 코드 만들기

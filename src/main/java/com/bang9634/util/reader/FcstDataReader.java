@@ -1,8 +1,11 @@
-package com.bang9634.util;
+package com.bang9634.util.reader;
 
 import com.bang9634.model.FcstData;
 import com.bang9634.model.Item;
-
+import com.bang9634.util.CommonUtils;
+import com.bang9634.util.constants.MsgConstants;
+import com.bang9634.util.constants.WeatherConstants;
+import com.bang9634.util.mapper.FcstCodeMapper;
 import com.fasterxml.jackson.databind.JsonNode; // JSON 파싱
 import com.fasterxml.jackson.databind.ObjectMapper; // JSON 파싱
 

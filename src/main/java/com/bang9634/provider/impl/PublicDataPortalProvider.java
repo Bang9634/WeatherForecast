@@ -1,11 +1,12 @@
-package com.bang9634;
+package com.bang9634.provider.impl;
 
 import java.net.http.HttpClient; // 클라이언트 클래스 객체 생성
 import java.net.http.HttpRequest; // 서버 GET요청 전송
 import java.net.http.HttpResponse; // 서버로부터 응답
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.bang9634.util.WeatherConstants;
+import com.bang9634.provider.WeatherProvider;
+import com.bang9634.util.constants.WeatherConstants;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.net.URI; // GET요청문 Build
@@ -15,7 +16,7 @@ import java.net.URI; // GET요청문 Build
  * 좌표 값 및 기타 신호 코드들의 자세한 정보는 기상청41_단기예보 조회서비스 문서 참고하기 바란다. <p>
  * getWeather() 함수를 이용해 JSON타입의 단기예보 데이터를 요청할 수 있다. <p>
  */
-public class WeatherApiClient {
+public class PublicDataPortalProvider implements WeatherProvider {
     /** 인증키 값을 저장 */
     private final String serviceKey;
 
@@ -29,7 +30,7 @@ public class WeatherApiClient {
      * @param   serviceKey 
      *          전달할 인증키 값
      */
-    public WeatherApiClient(String serviceKey) {
+    public PublicDataPortalProvider(String serviceKey) {
         this.serviceKey = serviceKey;
     }
 
@@ -71,7 +72,7 @@ public class WeatherApiClient {
      *          nx = 예보지점 X 좌표 <p>
      *          ny = 예보지점 Y 좌표 <p>
      */
-    public String requestWeatherJson(String baseDate, String baseTime, String nx, String ny) throws Exception {
+    public String fetchRawWeatherData(String baseDate, String baseTime, String nx, String ny) throws Exception {
 
         /** 전달할 정보를 포함한 요청메세지(url)를 선언한다. */
         String url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst" // 단기예보조희 API
@@ -140,7 +141,7 @@ public class WeatherApiClient {
      */
     public boolean isValiedServiceKey() {
         try {
-            this.requestWeatherJson(WeatherConstants.LABEL_BASE_DATE, WeatherConstants.LABEL_BASE_TIME, "60", "127");
+            this.fetchRawWeatherData(WeatherConstants.LABEL_BASE_DATE, WeatherConstants.LABEL_BASE_TIME, "60", "127");
             return true;
         } catch (Exception e) {
             return false;

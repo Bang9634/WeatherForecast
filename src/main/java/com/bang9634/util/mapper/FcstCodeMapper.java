@@ -1,4 +1,4 @@
-package com.bang9634.util;
+package com.bang9634.util.mapper;
 
 import java.util.Map; // Map을 사용
 

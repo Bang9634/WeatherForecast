@@ -1,9 +1,9 @@
-package com.bang9634;
+package com.bang9634.config;
 
 import java.io.*;
 import java.util.*;
 
-import com.bang9634.util.ConfigConstants;
+import com.bang9634.util.constants.ConfigConstants;
 
 /**
  * serviceKey와 같은 설정을 불러오는 클래스 <p>
