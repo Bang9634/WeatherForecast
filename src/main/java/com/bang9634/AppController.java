@@ -61,6 +61,8 @@ public class AppController {
     /**
      * API 요청에 필요한 좌표 및 시각과 시간을 설정해 기상 예보 데이터 요청 및 응답 파싱, 파싱된 데이터를 반환한다.
      * 
+     * TODO: 동기 처리로 인해 호출 시간이 길어지면 GUI가 멈춤. 개선의 여지 보임 #2 이슈도 아마 이때문인듯
+     * 
      * @return  성공적으로 API 요청을 수행 및 응답을 반환한다. 예외 발생시 null을 반환한다.
      */
     public static FcstData fetchWeatherData(String serviceKey, String nx, String ny) {

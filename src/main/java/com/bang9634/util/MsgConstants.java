@@ -1,5 +1,8 @@
 package com.bang9634.util;
 
+/**
+ * TODO: 외부 프로퍼티 파일로 분리하는 것이 표준적인 방법
+ */
 public class MsgConstants {
     public static final String TITLE = "Weather Forecast";
     public static final String NOTICE = "알림";

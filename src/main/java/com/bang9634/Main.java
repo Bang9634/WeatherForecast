@@ -2,6 +2,10 @@ package com.bang9634;
 
 import com.bang9634.util.ConfigConstants;
 
+/**
+ * TODO: 테스트 코드 만들기
+ */
+
 public class Main {
     static public void main(String[] args) {
         /** 
