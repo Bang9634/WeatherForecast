@@ -4,10 +4,7 @@ import java.net.http.HttpClient; // 클라이언트 클래스 객체 생성
 import java.net.http.HttpRequest; // 서버 GET요청 전송
 import java.net.http.HttpResponse; // 서버로부터 응답
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.bang9634.provider.WeatherProvider;
-import com.bang9634.util.constants.WeatherConstants;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import java.net.URI; // GET요청문 Build
 
@@ -72,6 +69,7 @@ public class PublicDataPortalProvider implements WeatherProvider {
      *          nx = 예보지점 X 좌표 <p>
      *          ny = 예보지점 Y 좌표 <p>
      */
+    @Override
     public String fetchRawWeatherData(String baseDate, String baseTime, String nx, String ny) throws Exception {
 
         /** 전달할 정보를 포함한 요청메세지(url)를 선언한다. */
@@ -114,37 +112,7 @@ public class PublicDataPortalProvider implements WeatherProvider {
                 throw new IllegalArgumentException("API 호출 실패 : XML 에러 응답\n" + responseBody);
             }
         }
-
-        /** 
-         * JSON로 API 응답이 왔을 경우.
-         * resultCode와 resultMsg를 확인하고, 정상 메세지인 "00"이 아니라면 예외를 던지고 내용을 출력한다.
-         */
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = mapper.readTree(responseBody);
-        String resultCode = root.path("response").path("header").path("resultCode").asText();
-        String resultMsg = root.path("response").path("header").path("resultMsg").asText();
-        if (!"00".equals(resultCode)) {
-            throw new IllegalArgumentException("API 호출 실패: " + resultMsg + " (resultCode=" + resultCode + ")");
-        }
-
         /** response에 단기예보 데이터를 담고 있는 body부분만 반환한다. */
         return responseBody;
-    }
-
-    /** 
-     * Service key가 유효한지 검사한다. <p>
-     * 
-     * 임의의 파라미터로 API 호출 테스트를 하여 유효한 Service key라면 true를 반환하고, 호출과정에서
-     * 예외를 던진다면 false를 반환한다.
-     * 
-     * @return  유효한 Service key이면 true, 그렇지않으면 false를 반환한다.
-     */
-    public boolean isValiedServiceKey() {
-        try {
-            this.fetchRawWeatherData(WeatherConstants.LABEL_BASE_DATE, WeatherConstants.LABEL_BASE_TIME, "60", "127");
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
     }
 }

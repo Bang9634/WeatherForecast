@@ -1,5 +1,7 @@
 package com.bang9634.util;
 
+import com.bang9634.util.constants.MsgConstants;
+
 /**
  * 편의성 유틸 메서드들이 있는 클래스이다. <p>
  * 
@@ -46,5 +48,13 @@ public class CommonUtils {
         }
         double val = Double.parseDouble(str);
         return val >= 900 || val <= -900;
+    }
+
+    public static String handleMissingValue(String value) {
+        if (isMissingValue(value)) {
+            return MsgConstants.MSG_MISSING_VALUE;
+        } else {
+            return value;
+        }
     }
 }

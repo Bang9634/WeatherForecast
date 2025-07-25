@@ -1,13 +1,24 @@
 package com.bang9634.provider.parser;
 
 import com.bang9634.model.FcstData;
-import com.bang9634.util.reader.FcstDataReader;
+import com.bang9634.model.Item;
+import com.bang9634.util.mapper.FcstCodeMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class WeatherDataParser {
     private final ObjectMapper mapper = new ObjectMapper();
 
+    public WeatherDataParser() {
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
     /**
      * 
      * 
@@ -17,39 +28,44 @@ public class WeatherDataParser {
      */
     public FcstData parse(String rawJson) throws Exception {
         try {
-            /** 
-             * XML로 API응답이 왔을 경우,
-             * SERVICE_KEY_IS_NOT_REGISTERED_ERROR 메세지가 포함되어있으면 예외를 던지고 인증키 에러 메세지를 출력한다.
-             * 그 외의 경우는 JSON 데이터 타입이 아니므로, 예외를 던지고 XML 에러 응답을 출력한다.
-             * 
-             * TODO: basetime이 아직 예보가 없는 경우와 같이 NODATA 에러도 XML로 옴. 예외처리 추가적으로 필요
-             */
-            if (rawJson.trim().startsWith("<")) {
-                if (rawJson.contains("SERVICE_KEY_IS_NOT_REGISTERED_ERROR")) {
-                    throw new IllegalArgumentException("API 호출 실패 : 인증키가 등록되지 않았거나 잘못되었습니다.");
-                }
-                else {
-                    throw new IllegalArgumentException("API 호출 실패 : XML 에러 응답\n" + rawJson);
-                }
-            }
-
+            JsonNode root = mapper.readTree(rawJson);
             /** 
              * JSON로 API 응답이 왔을 경우.
              * resultCode와 resultMsg를 확인하고, 정상 메세지인 "00"이 아니라면 예외를 던지고 내용을 출력한다.
              */
-            JsonNode root = mapper.readTree(rawJson);
             String resultCode = root.path("response").path("header").path("resultCode").asText();
             String resultMsg = root.path("response").path("header").path("resultMsg").asText();
             if (!"00".equals(resultCode)) {
                 throw new IllegalArgumentException("API 호출 실패: " + resultMsg + " (resultCode=" + resultCode + ")");
             }
 
-            FcstData fcstData = FcstDataReader.getVilageFcstData(FcstDataReader.parseVilageFcstJsonData(rawJson));
-
-            
-            return fcstData;
+            List<Item> items = parseItem(root);
+            return createFcstDataFromItems(items);
         } catch (Exception e) {
-            throw new Exception();
+            throw new Exception("데이터파싱 중 오류 발생", e);
         }
+    }
+
+    private List<Item> parseItem(JsonNode root) throws JsonProcessingException {
+        JsonNode itemNode = root
+            .path("response")
+            .path("body")
+            .path("items")
+            .path("item");
+        return mapper.readValue(
+            itemNode.toString(),
+            TypeFactory.defaultInstance().constructCollectionType(List.class, Item.class)
+        );
+    }
+
+    private FcstData createFcstDataFromItems(List<Item> items) {
+        Map<String, String> data = new LinkedHashMap<>();
+        for (Item item : items) {
+            data.put(
+                FcstCodeMapper.CATEGORY_CODE_MAP.get(item.getCategory()), 
+                FcstCodeMapper.getSubMappingTableValue(item)
+            );
+        }
+        return new FcstData(data);
     }
 }

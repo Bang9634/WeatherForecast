@@ -1,7 +1,7 @@
 package com.bang9634.gui;
 
 import com.bang9634.config.Config;
-import com.bang9634.provider.impl.PublicDataPortalProvider;
+import com.bang9634.service.ServiceKeyValidator;
 import com.bang9634.util.constants.ConfigConstants;
 import com.bang9634.util.constants.MsgConstants;
 
@@ -22,6 +22,7 @@ public class ServiceKeyInputGUI extends JFrame {
     private JLabel statusLabel; /** 상태창 */
     private Runnable onSuccess; /** 인증 성공 시 다음 동작을 담을 코드 블럭 변수 */
     private JCheckBox keepLoginCheckBox; /** 로그인 유지 체크박스 */
+    private final ServiceKeyValidator keyValidator;
 
     /** 
      * GUI 생성자 <p>
@@ -31,7 +32,8 @@ public class ServiceKeyInputGUI extends JFrame {
      * @param   onSuccess
      *          ServiceKeyInputGUI 생성자 호출 후, serviceKey가 유효할 때 실행할 코드 블록을 뜻하는 콜백 패턴이다.
      */
-    public ServiceKeyInputGUI(Runnable onSuccess) {
+    public ServiceKeyInputGUI(ServiceKeyValidator keyValidator, Runnable onSuccess) {
+        this.keyValidator = keyValidator;
         this.onSuccess = onSuccess;
         initComponents();
         initListeners();
@@ -126,9 +128,7 @@ public class ServiceKeyInputGUI extends JFrame {
             statusLabel.setText(MsgConstants.MSG_INPUT_SERVICE_KEY);
             return;
         }
-
-        PublicDataPortalProvider client = new PublicDataPortalProvider(key);
-        if (client.isValiedServiceKey()) {
+        if (keyValidator.validate(key)) {
             /** 로그인 유지 체크박스가 선택되어있으면 Config파일의 KEEP_LOGIN에 true, 아니면 false를 저장한다. */
             if (keepLoginCheckBox.isSelected()) {
                 Config.setConfig(ConfigConstants.KEEP_LOGIN, ConfigConstants.TRUE);

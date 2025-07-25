@@ -64,13 +64,13 @@ public class FcstCodeMapper {
      *          하위 메핑 테이블의 값을 반환하며, 존재하지 않으면 null을 반환한다.
      */
     public static String getSubMappingTableValue(Item item) {
-        String subMappingTableCode = item.category;
+        String subMappingTableCode = item.getCategory();
         if (subMappingTableCode.equals("PTY")) {
-            return PTY_CODE_MAP.get(Integer.parseInt(item.fcstValue));
+            return PTY_CODE_MAP.get(Integer.parseInt(item.getFcstValue()));
         }
         if (subMappingTableCode.equals("SKY")) {
-            return SKY_CODE_MAP.get(Integer.parseInt(item.fcstValue));
+            return SKY_CODE_MAP.get(Integer.parseInt(item.getFcstValue()));
         } 
-        return null;
+        return item.getFcstValue();
     }
 }

@@ -23,11 +23,14 @@ package com.bang9634.model;
  * WSD  : 풍속(m/s) <p>
  */
 public class Item {
-    public String fcstDate; // 예보일자
-    public String fcstTime; // 예보시각
-    public String category; // 카테고리
-    public String fcstValue; // 값
+    private String fcstDate; // 예보일자
+    private String fcstTime; // 예보시각
+    private String category; // 카테고리
+    private String fcstValue; // 값
 
+
+    public Item() {
+    }
     /** 
      * 매개변수 4개를 받는 Item 생성자 <p>
      * 
@@ -38,5 +41,21 @@ public class Item {
         this.fcstTime = fcstTime;
         this.category = category;
         this.fcstValue = fcstValue;
+    }
+
+    public String getFcstDate() {
+        return fcstDate;
+    }
+
+    public String getFcstTime() {
+        return fcstTime;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public String getFcstValue() {
+        return fcstValue;
     }
 }

@@ -3,6 +3,7 @@ package com.bang9634.gui;
 import javax.swing.*;
 
 import com.bang9634.model.FcstData;
+import com.bang9634.service.ServiceKeyValidator;
 
 /**
  * 화면 전환을 담당하는 클래스
@@ -17,8 +18,8 @@ public class NavigationManager {
      * @param   onSuccess
      *          콜백 구조를 위해 serviceKey가 유효할 때 실행할 코드 블록을 매개변수로 받는다.
      */
-    public void showServiceKeyInput(Runnable onSuccess) {
-        switchFrame(new ServiceKeyInputGUI(onSuccess));
+    public void showServiceKeyInput(ServiceKeyValidator serviceKeyValidator,Runnable onSuccess) {
+        switchFrame(new ServiceKeyInputGUI(serviceKeyValidator, onSuccess));
     }
 
     /**
@@ -27,8 +28,13 @@ public class NavigationManager {
      * @param   fcstData
      *          WeatherDisplay에 출력하기 위한 기상 예보 정보를 매개변수로 받는다.
      */
+    @Deprecated
     public void showWeatherDisplay(FcstData fcstData, Runnable onNext) {
-        switchFrame(new WeatherDisplayGUI(fcstData, onNext));
+        //switchFrame(new WeatherDisplayGUI(fcstData, onNext));
+    }
+
+    public void showFrame(JFrame frame) {
+        switchFrame(frame);
     }
     
     /**

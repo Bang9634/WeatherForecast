@@ -1,12 +1,19 @@
 package com.bang9634.controller;
 
+
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 import com.bang9634.config.Config;
 import com.bang9634.gui.NavigationManager;
+import com.bang9634.gui.WeatherDisplayGUI;
 import com.bang9634.model.FcstData;
+import com.bang9634.provider.WeatherProvider;
 import com.bang9634.provider.impl.PublicDataPortalProvider;
+import com.bang9634.provider.parser.WeatherDataParser;
+import com.bang9634.service.ServiceKeyValidator;
+import com.bang9634.service.WeatherService;
 import com.bang9634.util.constants.ConfigConstants;
-import com.bang9634.util.constants.WeatherConstants;
-import com.bang9634.util.reader.FcstDataReader;
 
 /**
  * 전체 애플리케이션의 흐름을 담당하는 컨트롤러 클래스 <p>
@@ -15,6 +22,8 @@ import com.bang9634.util.reader.FcstDataReader;
  */
 public class AppController {
     private static final NavigationManager navigationManager = new NavigationManager();
+    private static final WeatherDataParser weatherDataParser = new WeatherDataParser();
+    private static WeatherService weatherService;
 
     /** 프로그램 흐름을 시작한다. */
     public static void run() {
@@ -27,9 +36,10 @@ public class AppController {
      */
     private static void goToInitialScreen() {
         String serviceKey = Config.getConfig(ConfigConstants.SERVICE_KEY);
-        if (!Config.isConfigFileExists() || !new PublicDataPortalProvider(serviceKey).isValiedServiceKey()) {
+        if (!isServiceKeyValid(serviceKey)) {
             goToServiceKeyInput();
         } else {
+            initializeServices(serviceKey);
             goToWeatherDisplay();
         }
     }
@@ -39,10 +49,16 @@ public class AppController {
      * 인증 성공 시 다시 초기 화면 판단 로직을 다시 호출한다.
     */
     private static void goToServiceKeyInput() {
+        ServiceKeyValidator serviceKeyValidator = (serviceKey) -> {
+            return isServiceKeyValid(serviceKey);
+        };
+
+        Runnable successCallBack = () -> {
+            goToInitialScreen();
+        };
+
         javax.swing.SwingUtilities.invokeLater(() -> {
-            navigationManager.showServiceKeyInput(() -> {
-                goToInitialScreen();
-            });
+            navigationManager.showServiceKeyInput(serviceKeyValidator, successCallBack);
         });
     }
 
@@ -53,12 +69,24 @@ public class AppController {
      * 서비스 키 초기화 버튼을 누르면 초기 화면 판단 로직을 다시 호출한다.
      */
     private static void goToWeatherDisplay() {
-        String serviceKey = Config.getConfig(ConfigConstants.SERVICE_KEY);
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            FcstData fcstData = fetchWeatherData(serviceKey, "60", "127");
-            navigationManager.showWeatherDisplay(fcstData, () -> {
-                goToInitialScreen();
-            });
+        SwingUtilities.invokeLater(() -> {
+            try {
+                WeatherDisplayPresenter weatherDisplayPresenter = new WeatherDisplayPresenter(weatherService);
+                WeatherDisplayGUI view = new WeatherDisplayGUI(() -> goToInitialScreen());
+
+                weatherDisplayPresenter.setView(view);
+                view.setPresenter(weatherDisplayPresenter);
+
+                navigationManager.showFrame(view);
+
+                weatherDisplayPresenter.loadInitialData();
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "날씨 정보를 표시하는 중 오류 발생", "오류", JOptionPane.ERROR_MESSAGE);
+                goToServiceKeyInput();
+            }
         });
     }
 
@@ -69,19 +97,14 @@ public class AppController {
      * 
      * @return  성공적으로 API 요청을 수행 및 응답을 반환한다. 예외 발생시 null을 반환한다.
      */
-    public static FcstData fetchWeatherData(String serviceKey, String nx, String ny) {
-        PublicDataPortalProvider client = new PublicDataPortalProvider(serviceKey);
-        try {
-            String json = client.requestWeatherJson(
-                WeatherConstants.LABEL_BASE_DATE, 
-                WeatherConstants.LABEL_BASE_TIME, 
-                nx, 
-                ny
-                );
-            return FcstDataReader.getVilageFcstData(FcstDataReader.parseVilageFcstJsonData(json));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+    public static void initializeServices(String serviceKey) {
+        WeatherProvider weatherProvider = new PublicDataPortalProvider(serviceKey);
+        weatherService = new WeatherService(weatherProvider, weatherDataParser);
+    }
+
+    private static boolean isServiceKeyValid(String serviceKey) {
+        WeatherProvider tempProvider = new PublicDataPortalProvider(serviceKey);
+        WeatherService tempService = new WeatherService(tempProvider, weatherDataParser);
+        return tempService.isServiceKeyValid();
     }
 }
