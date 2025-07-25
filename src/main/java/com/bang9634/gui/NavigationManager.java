@@ -2,8 +2,6 @@ package com.bang9634.gui;
 
 import javax.swing.*;
 
-import com.bang9634.service.ServiceKeyValidator;
-
 /**
  * 화면(JFrame) 전환을 전문적으로 처리하는 클래스.
  * <p>
@@ -16,20 +14,6 @@ import com.bang9634.service.ServiceKeyValidator;
 public class NavigationManager {
     /** 현재 화면에 떠 있는 JFrame 객체를 저장하는 변수이다. */
     private JFrame currentFrame;
-
-    /**
-     * ServiceKeyInputGUI를 생성하고 화면에 표시한다.
-     * <p>
-     * AppController로부터 키 유효성 검사 로직(validator)과 성공 시 실행할 동작(onSuccess)을 받아 그대로 GUI에 전달한다.
-     *
-     * @param   serviceKeyValidator 
-     *          키 유효성을 검증하는 로직을 담은 콜백
-     * @param   onSuccess           
-     *          키 인증 성공 후 실행될 콜백
-     */
-    public void showServiceKeyInput(ServiceKeyValidator serviceKeyValidator, Runnable onSuccess) {
-        switchFrame(new ServiceKeyInputGUI(serviceKeyValidator, onSuccess));
-    }
 
     /**
      * AppController에서 이미 완전히 조립된 JFrame을 받아 화면에 표시한다.
