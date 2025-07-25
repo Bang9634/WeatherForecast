@@ -2,6 +2,7 @@ package com.bang9634.provider.parser;
 
 import com.bang9634.model.FcstData;
 import com.bang9634.model.Item;
+import com.bang9634.util.constants.WeatherConstants;
 import com.bang9634.util.mapper.FcstCodeMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -136,7 +137,19 @@ public class WeatherDataParser {
      */
     private FcstData createFcstDataFromItems(List<Item> items) {
         Map<String, String> data = new LinkedHashMap<>();
-        for (Item item : items) {
+
+        /**
+         * FcstData 객체에 기본 날짜와 시간을 설정한다.
+         */
+        data.put(WeatherConstants.LABEL_FCST_DATE, items.get(0).getFcstDate());
+        data.put(WeatherConstants.LABEL_FCST_TIME, items.get(0).getFcstTime());
+        /**
+         * Item 객체의 리스트를 순회하면서, 각 Item 객체의 카테고리 코드와 값을 FcstData 객체에 매핑한다.
+         * <p>
+         * FcstCodeMapper.CATEGORY_CODE_MAP을 사용하여 카테고리 코드를 매핑하고,
+         * FcstCodeMapper.getSubMappingTableValue(item)을 사용하여 해당 값을 가져온다.
+         */
+        for (Item item : items) { 
             data.put(
                 FcstCodeMapper.CATEGORY_CODE_MAP.get(item.getCategory()), 
                 FcstCodeMapper.getSubMappingTableValue(item)

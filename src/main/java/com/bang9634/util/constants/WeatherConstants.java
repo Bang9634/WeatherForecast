@@ -13,11 +13,11 @@ public class WeatherConstants {
     public static final String LABEL_FCST_TIME = "예보시각";
 
     /** 기기의 현재 LocalTime을 상수로 정의한다. 프로그램 실행 시 정의되어 고정된다. */
-    public static final String LABEL_BASE_DATE = java.time.LocalDate.now()
+    public static final String BASE_DATE = java.time.LocalDate.now()
         .format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd"));
 
     /** 
      * TODO: 추후 baseTime을 선택할 수 있는 기능 추후 추가
      */
-    public static final String LABEL_BASE_TIME = "0500";
+    public static final String BASE_TIME = "0500";
 }

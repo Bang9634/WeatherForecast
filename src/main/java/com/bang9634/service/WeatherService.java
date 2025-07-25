@@ -56,8 +56,8 @@ public class WeatherService {
         String rawJson;
         try {
             rawJson = weatherProvider.fetchRawWeatherData(
-                WeatherConstants.LABEL_BASE_DATE, 
-                WeatherConstants.LABEL_BASE_TIME, 
+                WeatherConstants.BASE_DATE, 
+                WeatherConstants.BASE_TIME, 
                 nx, ny
             );
         } catch (Exception e) {
