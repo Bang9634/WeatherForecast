@@ -3,6 +3,15 @@ package com.bang9634.util.constants;
 /**
  * TODO: 외부 프로퍼티 파일로 분리하는 것이 표준적인 방법
  */
+
+/**
+ * MsgConstants 클래스는 애플리케이션에서 사용하는 메시지 상수들을 정의한다.
+ * <p>
+ * 이 클래스는 사용자 인터페이스에서 표시되는 메시지, 버튼 텍스트 등을 상수로 정의하여,
+ * 코드 전반에서 일관되게 사용할 수 있도록 한다.
+ * 
+ * @author bangdeokjae
+ */
 public class MsgConstants {
     public static final String TITLE = "Weather Forecast";
     public static final String NOTICE = "알림";
