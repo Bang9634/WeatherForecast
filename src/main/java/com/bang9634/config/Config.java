@@ -1,12 +1,12 @@
-package com.bang9634;
+package com.bang9634.config;
 
 import java.io.*;
 import java.util.*;
 
-import com.bang9634.util.ConfigConstants;
+import com.bang9634.util.constants.ConfigConstants;
 
 /**
- * serviceKey와 같은 설정을 불러오는 클래스 <p>
+ * serviceKey와 같은 설정을 불러오는 클래스. <p>
  * 
  * macOS기준 <p>
  * 사용자 home 디렉토리 내부에 .weather_config 파일이 존재해야한다. <p>
@@ -57,10 +57,8 @@ public class Config {
      * 
      * @param   key
      *          Config 파일에 저장할 key를 매개변수로 받는다.
-     * 
      * @param   value
      *          해당하는 key에 value를 저장한다.
-     * 
      */
     public static void setConfig(String key, String value) {
         try {
@@ -80,7 +78,6 @@ public class Config {
      * 
      * @param   key
      *          Config파일에서 불러오고자 하는 값의 key를 인자로 넘긴다.
-     * 
      * @return  Config 파일에서 매개변수 key에 해당하는 값을 반환한다.
      */
     public static String getConfig(String key) {
