@@ -7,7 +7,6 @@ import javax.swing.SwingUtilities;
 import com.bang9634.config.Config;
 import com.bang9634.gui.NavigationManager;
 import com.bang9634.gui.WeatherDisplayGUI;
-import com.bang9634.model.FcstData;
 import com.bang9634.provider.WeatherProvider;
 import com.bang9634.provider.impl.PublicDataPortalProvider;
 import com.bang9634.provider.parser.WeatherDataParser;
