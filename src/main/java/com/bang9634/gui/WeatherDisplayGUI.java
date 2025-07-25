@@ -1,11 +1,11 @@
 package com.bang9634.gui;
 
-import com.bang9634.Config;
+import com.bang9634.config.Config;
+import com.bang9634.controller.WeatherDisplayPresenter;
 import com.bang9634.model.FcstData;
-import com.bang9634.util.ConfigConstants;
-import com.bang9634.util.GridCoordinateReader;
-import com.bang9634.util.MsgConstants;
-import com.bang9634.AppController;
+import com.bang9634.util.constants.ConfigConstants;
+import com.bang9634.util.constants.MsgConstants;
+import com.bang9634.util.reader.GridCoordinateReader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,20 +13,34 @@ import java.awt.event.ActionEvent;
 import java.util.Map;
 
 /**
- * 기상 예보 정보를 출력하는 GUI 클래스
+ * 기상 예보 정보를 보여주는 화면(GUI) 클래스.
+ * <p>
+ * MVP 패턴의 'View' 역할. 그저 화면을 그리고, 사용자 입력을 Presenter에게 전달하는 역할만 한다.
+ * 날씨 데이터가 무슨 의미인지, 콤보박스 선택 시 뭘 해야 하는지 전혀 모른다.
+ * 모든 로직은 Presenter가 처리하고, 이 클래스는 그저 Presenter가 시키는 대로 화면을 갱신만 한다.
+ * 
+ * @author  bangdeokjae
  */
 public class WeatherDisplayGUI extends JFrame {
-    private JTextArea textArea;                     /** 기상 정보를 출력할 텍스트 에어리어 */
-    private JButton initServiceKeyButton;           /** 서비스키 초기화 버튼 */
-    private Runnable onNext;
-    private JComboBox<String> regionCoordComboBox;  /** 시/도 콤보박스 */
-    private JComboBox<String> cityCoordComboBox;    /** 시/군/구 콤보박스 */
-    private JComboBox<String> streetCoordComboBox;  /** 동/읍/면 콤보박스 */
+    private JTextArea textArea;                                 /** 기상 정보를 출력할 텍스트 에어리어 */
+    private JButton initServiceKeyButton;                       /** 서비스키 초기화 버튼 */
+    private Runnable onNext;                                    /** 인증 성공 후 다음 동작을 실행할 코드 블럭 */        
+    private JComboBox<String> regionCoordComboBox;              /** 시/도 콤보박스 */
+    private JComboBox<String> cityCoordComboBox;                /** 시/군/구 콤보박스 */
+    private JComboBox<String> streetCoordComboBox;              /** 동/읍/면 콤보박스 */
+    private WeatherDisplayPresenter weatherDisplayPresenter;    /** 기상 예보 정보를 처리하는 Presenter */
 
     /**
-     * GUI 생성자
+     * GUI 생성자.
+     * <p>
+     * AppController로부터 '키 초기화' 버튼을 눌렀을 때 실행될 콜백(onNext)을 받는다.
+     * 화면에 필요한 모든 컴포넌트, 이벤트 리스너, 레이아웃을 초기화한다.
+     * 데이터 로직은 전혀 없고, 오직 화면 구성만 책임진다.
+     *
+     * @param   onNext    
+     *          '서비스 키 초기화' 버튼 클릭 시 실행될 콜백
      */
-    public WeatherDisplayGUI(FcstData fcstData, Runnable onNext) {
+    public WeatherDisplayGUI(Runnable onNext) {
         this.onNext = onNext;
         initComponents();
         initListeners();
@@ -36,10 +50,9 @@ public class WeatherDisplayGUI extends JFrame {
         /** 패널 add */
         add(createMainPanel(), BorderLayout.CENTER);
         add(createButtonPanel(), BorderLayout.SOUTH);
-        /** 데이터 set */
-        setWeatherData(fcstData);
 
-        KeyStroke closeKey = KeyStroke.getKeyStroke("meta W"); // macOS용
+        /** macOS에서 Cmd+W로 창 닫기 단축키 설정 */
+        KeyStroke closeKey = KeyStroke.getKeyStroke("meta W"); /** macOS에서는 "meta" 키가 Command 키를 의미한다. */
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(closeKey, "closeWindow");
         getRootPane().getActionMap().put("closeWindow", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
@@ -48,11 +61,27 @@ public class WeatherDisplayGUI extends JFrame {
         });
     }
 
-    /** 
-     * 기상 정보를 텍스트 공간에 순차적으로 출력할 수 있도록 세팅한다.
-     * 
-     * @param   fcstData 
-     *          기상 예보 데이터를 인자로 넘겨 출력할 수 있도록 세팅한다.
+    /**
+     * Presenter를 설정한다.
+     * <p>
+     * 이 메서드는 AppController에서 WeatherDisplayPresenter를 주입받아 호출된다.
+     * Presenter는 View(GUI)와 상호작용하며, 날씨 데이터를 가져오고 화면을 갱신하는 모든 로직을 처리한다.
+     *
+     * @param   weatherDisplayPresenter   
+     *          WeatherDisplayPresenter 인스턴스
+     */
+    public void setPresenter(WeatherDisplayPresenter weatherDisplayPresenter) {
+        this.weatherDisplayPresenter = weatherDisplayPresenter;
+    }
+
+    /**
+     * 날씨 데이터를 텍스트 영역에 표시한다.
+     * <p>
+     * FcstData 객체를 받아, 그 안의 데이터를 문자열로 변환하여 textArea에 설정한다.
+     * 이 메서드는 Presenter가 날씨 데이터를 가져온 후 호출된다.
+     *
+     * @param   fcstData   
+     *          날씨 예보 데이터를 담고 있는 FcstData 객체
      */
     public void setWeatherData(FcstData fcstData) {
         StringBuilder sb = new StringBuilder();
@@ -66,7 +95,9 @@ public class WeatherDisplayGUI extends JFrame {
     }
 
     /**
-     * 컴포넌트를 초기화한다.
+     * 컴포넌트들을 초기화한다.
+     * <p>
+     * 화면에 표시할 텍스트 영역, 버튼, 콤보박스 등을 생성하고 기본 설정을 적용한다.
      */
     private void initComponents() {
         textArea = new JTextArea();     
@@ -91,6 +122,8 @@ public class WeatherDisplayGUI extends JFrame {
 
     /**
      * 이벤트 리스너를 초기화한다.
+     * <p>
+     * 버튼 클릭, 콤보박스 선택 등 사용자 입력 이벤트를 처리할 리스너를 등록한다.
      */
     private void initListeners() {
         initServiceKeyButton.addActionListener(this::onInitServiceKey);
@@ -101,6 +134,8 @@ public class WeatherDisplayGUI extends JFrame {
 
     /**
      * 레이아웃을 초기화한다.
+     * <p>
+     * JFrame의 기본 설정을 적용하고, 컴포넌트들을 배치할 레이아웃을 설정한다.
      */
     private void initLayout() {
         setTitle(MsgConstants.TITLE);
@@ -111,9 +146,11 @@ public class WeatherDisplayGUI extends JFrame {
     }
 
     /**
-     * 콤보 박스 패널을 만든다.
-     * 
-     * @return  콤보 박스 패널 객체를 반환한다.
+     * 콤보 박스 패널을 생성한다.
+     * <p>
+     * 시/도, 시/군/구, 동/읍/면 콤보박스를 세로로 배치하여 사용자에게 지역 선택 UI를 제공한다.
+     *
+     * @return  구성된 콤보 박스 패널 객체
      */
     private JPanel createComoboBoxPanel() {
         JPanel comboBoxPanel = new JPanel();
@@ -135,9 +172,11 @@ public class WeatherDisplayGUI extends JFrame {
     }
 
     /**
-     * 메인 패널을 만든다.
-     * 
-     * @return  메인 패널 객체를 반환한다.
+     * 메인 패널을 생성한다.
+     * <p>
+     * 텍스트 영역과 콤보 박스를 포함하는 패널을 생성하여 화면 중앙에 배치한다.
+     *
+     * @return  구성된 메인 패널 객체
      */
     private JPanel createMainPanel() {
         JPanel mainPanel = new JPanel();
@@ -151,9 +190,11 @@ public class WeatherDisplayGUI extends JFrame {
     }
 
     /**
-     * 버튼 패널을 만든다.
-     * 
-     * @return  버튼 패널 객체를 반환한다.
+     * 버튼 패널을 생성한다.
+     * <p>
+     * 서비스 키 초기화 버튼을 포함하는 패널을 생성하여 화면 하단에 배치한다.
+     *
+     * @return  구성된 버튼 패널 객체
      */
     private JPanel createButtonPanel() {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -162,10 +203,13 @@ public class WeatherDisplayGUI extends JFrame {
     }
 
     /**
-     * 서비스 키 초기화 버튼 액션을 감지했을 때 호출된다. <p>
-     * 
-     * Config 파일에 저장되어있는 serviceKey를 공백으로 편집하고,
-     * 초기 화면으로 되돌아간다.
+     * '서비스 키 초기화' 버튼 클릭 시 실행되는 로직.
+     * <p>
+     * Config에서 서비스 키를 초기화하고, 사용자에게 알림 메시지를 띄운다.
+     * 이후, 인증 성공 콜백(onNext)이 있다면 실행한다.
+     *
+     * @param   e
+     *          액션 이벤트 객체 (사용 안 함)
      */
     private void onInitServiceKey(ActionEvent e) {
         Config.setConfig(ConfigConstants.SERVICE_KEY, "");
@@ -179,96 +223,87 @@ public class WeatherDisplayGUI extends JFrame {
         if (onNext != null) onNext.run();
     }
 
-    /** 
-     * 콤보 박스 item 선택 액션을 감지했을 때 호출된다. <p>
+    /**
+     * 콤보 박스에 시/군/구 정보를 업데이트한다.
+     * <p>
+     * 지역 선택 콤보 박스에서 선택된 지역에 따라 시/군/구 콤보 박스의 내용을 갱신한다.
+     *
+     * @param   cities    
+     *          시/군/구 정보 배열
+     */
+    public void updateCityComboBox(String[] cities) {
+        cityCoordComboBox.removeAllItems();
+        for (String city : cities) {
+            cityCoordComboBox.addItem(city);
+        }
+    }
+
+    /**
+     * 콤보 박스에 동/읍/면 정보를 업데이트한다.
+     * <p>
+     * 도시/구/동 콤보 박스에서 선택된 도시/구에 따라 동/읍/면 콤보 박스의 내용을 갱신한다.
+     *
+     * @param   streets
+     *          동/읍/면 정보 배열
+     */
+    public void updateStreetComboBox(String[] streets) {
+        streetCoordComboBox.removeAllItems();
+        for (String street : streets) {
+            streetCoordComboBox.addItem(street);
+        }
+    }
+
+    /**
+     * 로딩 상태를 표시한다.
+     * <p>
+     * 날씨 정보를 불러오는 중임을 사용자에게 알리는 메시지를 텍스트 영역에 표시한다.
+     */
+    public void showLoadingState() {
+        textArea.setText("날씨 정보를 불러오는 중");
+    }
+
+
+
+    /**
+     * 사용자가 '시/도' 콤보박스 선택 시 이벤트를 처리한다.
+     * <p>
+     * 선택된 '시/도'에 맞는 '시/군/구' 목록을 조회, Presenter에게 콤보박스 이벤트를 전달한다.
      * 
-     * item 선택 시, 콤보박스 내용물 초기화 및 좌표 값을 불러와 이를 토대로 기상정보를 업데이트한다.
+     * @param   e     
+     *          액션 이벤트 객체 (사용 안 함)
      */
     private void onRegionSelected(ActionEvent e) {
-        String selectedRegion = (String) regionCoordComboBox.getSelectedItem();
-        cityCoordComboBox.removeAllItems();
-        streetCoordComboBox.removeAllItems();
-        if (selectedRegion != null) {
-            Map<String, Map<String, int[]>> cityMap = GridCoordinateReader.ADDRESS_COORD_TREE.get(selectedRegion);
-            for (String city : cityMap.keySet()) {
-                cityCoordComboBox.addItem(city);
-            }
-            updateWeatherBySelectedComboBox();
-        }
-    }
-    
-    /** 
-     * city 콤보박스 이벤트를 감지했을 때 실행된다.
-    */
-    private void onCitySelected(ActionEvent e) {
-        String selectedRegion = (String) regionCoordComboBox.getSelectedItem();
-        String selectedCity = (String) cityCoordComboBox.getSelectedItem();
-        streetCoordComboBox.removeAllItems();
-        if (selectedRegion != null && selectedCity != null) {
-            Map<String, int[]> streetMap = GridCoordinateReader.ADDRESS_COORD_TREE
-                .get(selectedRegion)
-                .get(selectedCity);
-                
-            for (String street : streetMap.keySet()) {
-                streetCoordComboBox.addItem(street);
-            }
-            updateWeatherBySelectedComboBox();
-        }
+        weatherDisplayPresenter.onRegionSelected((String) regionCoordComboBox.getSelectedItem());
     }
 
     /**
-     * street 콤보박스 이벤트를 감지했을 때 실행된다.
+     * 사용자가 '시/군/구' 콤보박스 선택 시 이벤트를 처리한다.
+     * <p>
+     * 선택된 '시/도'와 '시/군/구'에 맞는 '동/읍/면' 목록을 조회, Presenter에게 콤보박스 이벤트를 전달한다.
+     * 
+     * @param   e     
+     *          액션 이벤트 객체 (사용 안 함)
+     */
+    private void onCitySelected(ActionEvent e) {
+        weatherDisplayPresenter.onCitySelected(
+            (String) regionCoordComboBox.getSelectedItem(),
+            (String) cityCoordComboBox.getSelectedItem()
+        );
+    }
+
+    /**
+     * 사용자가 '동/읍/면' 콤보박스 선택 시 이벤트를 처리한다.
+     * <p>
+     * 선택된 '시/도', '시/군/구', '동/읍/면'에 맞는 날씨 정보를 조회, Presenter에게 콤보박스 이벤트를 전달한다.
+     *
+     * @param   e
+     *          액션 이벤트 객체 (사용 안 함)
      */
     private void onStreetSelected(ActionEvent e) {
-        String selectedRegion = (String) regionCoordComboBox.getSelectedItem();
-        String selectedCity = (String) cityCoordComboBox.getSelectedItem();
-        String selectedStreet = (String) streetCoordComboBox.getSelectedItem();
-
-        if (selectedRegion != null && selectedCity != null && selectedStreet != null) {
-            updateWeatherBySelectedComboBox();
-        }
-    }
-
-    /**
-     * 콤보박스 선택시 기상 예보 데이터를 업데이트한다. <p>
-     * 
-     * 3개의 콤보박스로 선택한 지역 좌표를 통해 API를 호출해 기상 예보정보를 가져와
-     * 백그라운드에서 작업을 수행한다.
-     */
-    private void updateWeatherBySelectedComboBox() {
-        String selectedRegion = (String) regionCoordComboBox.getSelectedItem();
-        String selectedCity = (String) cityCoordComboBox.getSelectedItem();
-        String selectedStreet = (String) streetCoordComboBox.getSelectedItem();
-
-        if (selectedRegion != null && selectedCity != null && selectedStreet != null) {
-            int[] coord = GridCoordinateReader.ADDRESS_COORD_TREE
-            .get(selectedRegion)
-            .get(selectedCity)
-            .get(selectedStreet);
-
-            if (coord != null) {
-                String serviceKey = Config.getConfig(ConfigConstants.SERVICE_KEY);
-                String nx = String.valueOf(coord[0]);
-                String ny = String.valueOf(coord[1]);
-
-                /** 백그라운드에서 API를 호출한다. */
-                new SwingWorker<FcstData, Void>() {
-                    @Override
-                    protected FcstData doInBackground() {
-                        return AppController.fetchWeatherData(serviceKey, nx, ny);
-                    }
-                    @Override
-                    protected void done() {
-                        try {
-                            FcstData fcstData = get();
-                            setWeatherData(fcstData);
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                            textArea.setText("기상 정보를 불러오지 못했습니다.");
-                        }
-                    }
-                }.execute();
-            }
-        }   
+        weatherDisplayPresenter.onLocationChanged(
+            (String) regionCoordComboBox.getSelectedItem(),
+            (String) cityCoordComboBox.getSelectedItem(),
+            (String) streetCoordComboBox.getSelectedItem()
+        );
     }
 }
