@@ -151,7 +151,7 @@ public class PublicDataPortalProvider implements WeatherProvider {
                 throw new IllegalArgumentException("API 호출 실패 : 인증키가 등록되지 않았거나 잘못되었습니다.");
             }
             else {
-                throw new IllegalArgumentException("API 호출 실패 : XML 에러 응답\n" + responseBody);
+                throw new IllegalStateException("API 호출 실패 : XML 에러 응답\n" + responseBody);
             }
         }
         /** response에 단기예보 데이터를 담고 있는 body부분만 반환한다. */
