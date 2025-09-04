@@ -5,10 +5,6 @@ import com.bang9634.controller.AppController;
 import com.bang9634.util.constants.ConfigConstants;
 
 /**
- * TODO: 테스트 코드 만들기
- */
-
-/**
  * Main 클래스는 애플리케이션의 진입점으로, 프로그램 실행 시 가장 먼저 호출되는 클래스이다.
  * <p>
  * 이 클래스는 프로그램의 초기 설정을 로드하고, 종료 시 실행할 작업을 등록한다.
