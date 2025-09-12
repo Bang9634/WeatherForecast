@@ -42,6 +42,7 @@ import java.net.URI; // GET요청문 Build
 public class PublicDataPortalProvider implements WeatherProvider {
     /** 인증키 값 */
     private final String serviceKey;
+    private final HttpClient client;
 
     /** 
      * PublicDataPortalProvider 생성자 
@@ -54,7 +55,26 @@ public class PublicDataPortalProvider implements WeatherProvider {
      *          전달할 인증키 값
      */
     public PublicDataPortalProvider(String serviceKey) {
+        this(serviceKey, HttpClient.newHttpClient());
+    }
+
+    /** 
+     * PublicDataPortalProvider 테스트 코드 용 생성자 
+     * <p>
+     * 인자로 인증 키 값을 전달받아 해당 클래스의 속성 serviceKey에 저장한다.
+     * 인증키는 기상청 API에 접근하기 위한 필수 요소로,
+     * 기상청의 공공 데이터 포털에서 발급받아야 한다.
+     * <p>
+     * 로직 테스트를 위해 매개변수로 가짜 HttpsClient 객체를 받는다. 
+     * <p>
+     * @param   serviceKey
+     *          전달할 인증키 값
+     * @param   client
+     *          외부에서 주입할 가짜 HttpClient객체
+     */
+    public PublicDataPortalProvider(String serviceKey, HttpClient client) {
         this.serviceKey = serviceKey;
+        this.client = client;
     }
 
     /**
@@ -96,6 +116,7 @@ public class PublicDataPortalProvider implements WeatherProvider {
     @Override
     public String fetchRawWeatherData(String baseDate, String baseTime, String nx, String ny) throws Exception {
 
+        /** TODO: url 빌더 만들어서 오타 방지 및 재활용성 상승시키기 */
         /** 전달할 정보를 포함한 요청메세지(url)를 선언한다. */
         String url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst" // 단기예보조희 API
                    + "?serviceKey=" + serviceKey // 인증키
@@ -107,16 +128,13 @@ public class PublicDataPortalProvider implements WeatherProvider {
                    + "&nx=" + nx // 예보지점 X 좌표
                    + "&ny=" + ny; // 예보지점 Y 좌표
 
-        /** 클라이언트 객체 생성한다. */
-        HttpClient client = HttpClient.newHttpClient();
-
         /** 서버에 전송할 GET요청문 build한다. */
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .build();
 
         /** 클라이언트 객체가 서버에 GET요청 전송 후, client.send() 메서드는 서버의 Response을 반환, reponse 지역변수에 저장한다. */
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = this.client.send(request, HttpResponse.BodyHandlers.ofString());
         String responseBody = response.body();
 
         System.out.println("API 응답 : " + responseBody);
@@ -133,7 +151,7 @@ public class PublicDataPortalProvider implements WeatherProvider {
                 throw new IllegalArgumentException("API 호출 실패 : 인증키가 등록되지 않았거나 잘못되었습니다.");
             }
             else {
-                throw new IllegalArgumentException("API 호출 실패 : XML 에러 응답\n" + responseBody);
+                throw new IllegalStateException("API 호출 실패 : XML 에러 응답\n" + responseBody);
             }
         }
         /** response에 단기예보 데이터를 담고 있는 body부분만 반환한다. */

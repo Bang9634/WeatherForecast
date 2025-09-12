@@ -1,6 +1,7 @@
 package com.bang9634.model;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.LinkedHashMap;
 
  /**
@@ -36,5 +37,33 @@ public class FcstData {
      */
     public FcstData(Map<String, String> data) {
         this.data = data;
+    }
+
+    /**
+     * 객체 비교를 위해 오버라이드한 메서드.
+     * <p>
+     * 테스트 코드에서 FcstData의 data 값 일치 확인을 위해 구현
+     * 
+     * @param   o
+     *          비교할 객체
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FcstData fcstData = (FcstData)o;
+        return Objects.equals(this.data, fcstData.data);
+    }
+
+    /**
+     * 해시 기반 자료구조의 해시값을 반환하는 역할의 메서드
+     * <p>
+     * LinkedHashMap 자료구조를 이용하기 때문에 동등성 비교와 일관성 유지를 위해 오버라이드하여 구현
+     * 
+     * @return  FcstData의 data 해시값을 반환
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(data);
     }
 }

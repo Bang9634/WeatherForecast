@@ -47,11 +47,11 @@ public class WeatherDataParser {
      * 알 수 없는 속성이 있을 경우 예외를 발생시키지 않도록 설정한다.
      */
     public WeatherDataParser() {
-        /** Jackson 라이브러리를 사용하여 JSON 데이터를 파싱하는 ObjectMapper 객체를 생성  
+        /** Jackson 라이브러리를 사용하여 JSON 데이터를 파싱하는 ObjectMapper 객체를 생성한다.
          * <p>
          * 이 객체는 JSON 문자열을 Java 객체로 변환하는 데 사용된다.
          * <p>
-         * ObjectMapper는 JSON 데이터를 Java 객체로 변환하는 데 필요한 다양한 기능을 제공
+         * ObjectMapper는 JSON 데이터를 Java 객체로 변환하는 데 필요한 다양한 기능을 제공한다.
          * 예를 들어, JSON 문자열을 Item 객체의 리스트로 변환하거나, FcstData 객체로 변환하는 데 사용된다.
          * 또한, JSON 파싱 시 알 수 없는 속성이 있을 경우 예외를 발생시키지 않도록 설정되어 있다.
          * 이 설정은 API 응답의 형식이 변경되더라도 유연하게 대처할 수 있도록 도와준다.

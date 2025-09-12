@@ -6,6 +6,7 @@ import javax.swing.SwingUtilities;
 import com.bang9634.config.Config;
 import com.bang9634.gui.NavigationManager;
 import com.bang9634.gui.WeatherDisplayGUI;
+import com.bang9634.gui.ServiceKeyInputGUI;
 import com.bang9634.provider.WeatherProvider;
 import com.bang9634.provider.impl.PublicDataPortalProvider;
 import com.bang9634.provider.parser.WeatherDataParser;
@@ -81,7 +82,8 @@ public class AppController {
 
         /** ServiceKeyInput을 화면에 출력할 것을 지시한다. */
         javax.swing.SwingUtilities.invokeLater(() -> {
-            navigationManager.showServiceKeyInput(serviceKeyValidator, successCallBack);
+            ServiceKeyInputGUI serviceKeyInputGuiView = new ServiceKeyInputGUI(serviceKeyValidator, successCallBack);
+            navigationManager.showFrame(serviceKeyInputGuiView);
         });
     }
 
@@ -98,13 +100,13 @@ public class AppController {
             try {
                 /** 서비스 키를 가져와 WeatherService를 초기화한다. */
                 WeatherDisplayPresenter weatherDisplayPresenter = new WeatherDisplayPresenter(weatherService);
-                WeatherDisplayGUI view = new WeatherDisplayGUI(() -> goToInitialScreen());
+                WeatherDisplayGUI weatherDisplayGuiView = new WeatherDisplayGUI(() -> goToInitialScreen());
 
                 /** WeatherDisplayPresenter와 WeatherDisplayGUI를 연결한다. */
-                weatherDisplayPresenter.setView(view);
-                view.setPresenter(weatherDisplayPresenter);
+                weatherDisplayPresenter.setView(weatherDisplayGuiView);
+                weatherDisplayGuiView.setPresenter(weatherDisplayPresenter);
 
-                navigationManager.showFrame(view);
+                navigationManager.showFrame(weatherDisplayGuiView);
 
                 /** 초기 데이터를 로드한다. */
                 weatherDisplayPresenter.loadInitialData();
